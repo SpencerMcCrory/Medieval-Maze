@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace FinalProjectGameProgramming.Handlers
     {
         public Texture2D[] Frames { get; set; }
         public double TimePerFrame { get; set; }
+        private int currentFrame;
+        private double timer;
 
         public int FrameCount => Frames.Length;
 
@@ -18,6 +21,21 @@ namespace FinalProjectGameProgramming.Handlers
         {
             Frames = frames;
             TimePerFrame = timePerFrame;
+            currentFrame = 0;
+            timer = 0.0;
         }
+
+        public void Update(GameTime gameTime)
+        {
+            timer += gameTime.ElapsedGameTime.TotalSeconds;
+            if (timer >= TimePerFrame)
+            {
+                currentFrame = (currentFrame + 1) % Frames.Length;
+                timer -= TimePerFrame;
+            }
+        }
+
+        public Texture2D CurrentFrame => Frames[currentFrame];
+
     }
 }
