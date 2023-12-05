@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Profile>Reach</Profile>
+  <Platform>Windows</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/Background.png</File>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/Button_not_pressed.png</File>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/Button_pressed.png</File>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/Door_Closed.png</File>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/Door_Open.png</File>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/galleryFont.spritefont</File>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/knight_f_idle_anim_f0.png</File>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/knight_f_idle_anim_f1.png</File>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/knight_f_idle_anim_f2.png</File>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/knight_f_idle_anim_f3.png</File>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/knight_f_run_anim_f0.png</File>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/knight_f_run_anim_f1.png</File>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/knight_f_run_anim_f2.png</File>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/knight_f_run_anim_f3.png</File>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/Walls_BackGround.png</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>

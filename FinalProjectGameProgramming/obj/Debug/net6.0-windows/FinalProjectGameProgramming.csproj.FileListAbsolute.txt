@@ -1,3 +1,15 @@
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\Background.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\Door_Closed.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\Door_Open.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\knight_f_idle_anim_f0.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\knight_f_idle_anim_f1.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\knight_f_idle_anim_f2.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\knight_f_idle_anim_f3.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\knight_f_run_anim_f0.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\knight_f_run_anim_f1.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\knight_f_run_anim_f2.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\knight_f_run_anim_f3.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\Walls_BackGround.xnb
 C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\FinalProjectGameProgramming.exe
 C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\FinalProjectGameProgramming.deps.json
 C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\FinalProjectGameProgramming.runtimeconfig.json
@@ -35,3 +47,6 @@ C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming
 C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\obj\Debug\net6.0-windows\FinalProjectGameProgramming.pdb
 C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\obj\Debug\net6.0-windows\FinalProjectGameProgramming.genruntimeconfig.cache
 C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\obj\Debug\net6.0-windows\ref\FinalProjectGameProgramming.dll
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\galleryFont.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\Button_not_pressed.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\Button_pressed.xnb
