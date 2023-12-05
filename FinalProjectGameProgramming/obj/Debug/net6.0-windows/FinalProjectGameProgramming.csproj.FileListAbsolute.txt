@@ -50,3 +50,13 @@ C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming
 C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\galleryFont.xnb
 C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\Button_not_pressed.xnb
 C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\Button_pressed.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\button_click.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\futuristic_button_click.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\swampy_anim_f0.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\swampy_anim_f1.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\swampy_anim_f2.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\swampy_anim_f3.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\big_zombie_run_anim_f0.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\big_zombie_run_anim_f1.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\big_zombie_run_anim_f2.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\big_zombie_run_anim_f3.xnb

@@ -1,12 +1,17 @@
-﻿using FinalProjectGameProgramming.Handlers;
+﻿using FinalProjectGameProgramming.Entities;
+using FinalProjectGameProgramming.Handlers;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Forms;
 using System.Xml.Linq;
+using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace FinalProjectGameProgramming
 {
@@ -21,11 +26,16 @@ namespace FinalProjectGameProgramming
         private LevelHandler currentLevel;
         private int tileSize = 64;
         private Vector2 playerPosition;
-        private float playerSpeed = 300f;
         private float movementDelta;
+        const int SPIKE_HITBOX_OFFSET = 10;
         private Texture2D playerTexture;
-        const int PLAYER_HEIGHT = 56;
-        const int PLAYER_WIDTH = 32;
+        private Texture2D slimeTexture;
+        Player player;
+        Texture2D[] slimeRunFrames;
+        private Texture2D bigZombieTexture;
+        List<Monster> monsters = new List<Monster>();
+
+        int timingDelay = 0;
 
         private Texture2D[] playerAnimationFrames;
         const int playerFrameCount = 4;
@@ -33,17 +43,27 @@ namespace FinalProjectGameProgramming
         private string currentAnimationKey = "idle";
         private int currentFrame;
         private double animationTimer;
-        private double timePerFrame = 0.2;
+        private double timePerFrame = 0.4;
 
         private Dictionary<string, AnimationHandler> animations;
 
         private CameraHandler camera;
+        private CollisionHandler collisionHandler;
 
         SpriteFont font;
 
         string debugText;
         bool levelComplete;
         bool gameOver;
+        bool buttonPressed;
+
+        Texture2D pixel;
+
+
+        SoundEffect buttonClickSE;
+
+        private TimeSpan elapsedTime = TimeSpan.Zero;
+        private int score = 0;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -64,35 +84,56 @@ namespace FinalProjectGameProgramming
             {
                 throw new FileNotFoundException("Unable to load walls.csv. File not found.");
             }
-
+            player = new Player();
             playerPosition = new Vector2(currentLevel.StartPoint[0] * tileSize, currentLevel.StartPoint[1] * tileSize); // Starting position of the player
             camera = new CameraHandler();
+            collisionHandler = new CollisionHandler(currentLevel, tileSize);
+            buttonPressed = false;
+
+            
 
 
             base.Initialize();
         }
-
+        
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             animations = new Dictionary<string, AnimationHandler>();
 
-            // Load idle animation frames
-            Texture2D[] idleFrames = new Texture2D[4];
+            // Load idle animation frames for player
+            Texture2D[] playerIdleFrames = new Texture2D[4];
             for (int i = 0; i < 4; i++)
             {
-                idleFrames[i] = Content.Load<Texture2D>($"knight_f_idle_anim_f{i}");
+                playerIdleFrames[i] = Content.Load<Texture2D>($"knight_f_idle_anim_f{i}");
             }
-            animations["idle"] = new AnimationHandler(idleFrames, 0.5);
+            animations["playerIdle"] = new AnimationHandler(playerIdleFrames, 1);
 
-            // Load run animation frames
-            Texture2D[] runFrames = new Texture2D[4];
+            
+
+            // Load run animation frames for player
+            Texture2D[] playerRunFrames = new Texture2D[4];
             for (int i = 0; i < 4; i++)
             {
-                runFrames[i] = Content.Load<Texture2D>($"knight_f_run_anim_f{i}");
+                playerRunFrames[i] = Content.Load<Texture2D>($"knight_f_run_anim_f{i}");
             }
-            animations["run"] = new AnimationHandler(runFrames, 0.1);
+            animations["playerRun"] = new AnimationHandler(playerRunFrames, 0.1);
+
+            //Load run animation frames for slime monster
+            Texture2D[] slimeRunFrames = new Texture2D[4];
+            for (int i = 0; i < 4; i++)
+            {
+                slimeRunFrames[i] = Content.Load<Texture2D>($"swampy_anim_f{i}");
+            }
+
+            //Load run animation frames for big zombie monster
+            Texture2D[] bigZombieRunFrames = new Texture2D[4];
+            for (int i = 0; i < 4; i++)
+            {
+                bigZombieRunFrames[i] = Content.Load<Texture2D>($"big_zombie_run_anim_f{i}");
+            }
+
 
             // Load textures
             backgroundTexture = Content.Load<Texture2D>("Background");
@@ -100,6 +141,37 @@ namespace FinalProjectGameProgramming
             door = Content.Load<Texture2D>("Door_Closed");
             button = Content.Load<Texture2D>("Button_not_pressed");
             playerTexture = Content.Load<Texture2D>("knight_f_run_anim_f0");
+
+            slimeTexture = Content.Load<Texture2D>("swampy_anim_f0");
+            bigZombieTexture = Content.Load<Texture2D>("big_zombie_run_anim_f0");
+
+            float bigZombieSpeed = 16f; // Slower speed for BigZombie
+            Vector2 bigZombieDirection = new Vector2(1, 0); // Initial direction for BigZombie
+
+            float slimeMonsterSpeed = 32f; // Faster speed for SlimeMonster
+            Vector2 slimeMonsterDirection = new Vector2(-1, 0); // Initial direction for SlimeMonster
+
+
+            foreach (int[] spawnPoint in currentLevel.MonsterSpawnPoints)
+            {
+                if (spawnPoint[0] % 2 == 0)
+                {
+                    Vector2 position = new Vector2(spawnPoint[0] * tileSize - 15, spawnPoint[1] * tileSize - 60);
+                    monsters.Add(new BigZombie(bigZombieRunFrames, position, collisionHandler, bigZombieSpeed, bigZombieDirection));
+                }
+                else
+                {
+                    Vector2 position = new Vector2(spawnPoint[0] * tileSize + 5, spawnPoint[1] * tileSize);
+                    monsters.Add(new SlimeMonster(slimeRunFrames, position, collisionHandler, slimeMonsterSpeed, slimeMonsterDirection));
+                }
+            }
+
+            buttonClickSE = Content.Load<SoundEffect>("futuristic_button_click");
+            font = Content.Load<SpriteFont>("galleryFont");
+
+            //hitbox debug
+            /*pixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            pixel.SetData(new[] { Color.White });*/
         }
 
         protected override void Update(GameTime gameTime)
@@ -107,7 +179,20 @@ namespace FinalProjectGameProgramming
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            movementDelta = (float)gameTime.ElapsedGameTime.TotalSeconds * playerSpeed;
+            //will be used to update the monsters
+            foreach (Monster monster in monsters)
+            {
+                monster.Update(gameTime);
+                Rectangle monsterBounds = new Rectangle((int)monster.Position.X,
+                                                        (int)monster.Position.Y,
+                                                        monster.Texture.Width,
+                                                        monster.Texture.Height);
+                if (collisionHandler.CheckCollisionWithEnvironment(monsterBounds))
+                {
+                    // Handle monster collision with the environment
+                }
+            }
+            movementDelta = (float)gameTime.ElapsedGameTime.TotalSeconds * player.speed;
 
             animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
             if (animationTimer > timePerFrame)
@@ -121,22 +206,22 @@ namespace FinalProjectGameProgramming
 
 
             KeyboardState state = Keyboard.GetState();
-            if (state.IsKeyDown(Keys.Up))
+            if (state.IsKeyDown(Keys.Up) || state.IsKeyDown(Keys.W))
                 direction.Y -= 1;
-            if (state.IsKeyDown(Keys.Down))
+            if (state.IsKeyDown(Keys.Down) || state.IsKeyDown(Keys.S))
                 direction.Y += 1;
-            if (state.IsKeyDown(Keys.Left))
+            if (state.IsKeyDown(Keys.Left) || state.IsKeyDown(Keys.A))
                 direction.X -= 1;
-            if (state.IsKeyDown(Keys.Right))
+            if (state.IsKeyDown(Keys.Right) || state.IsKeyDown(Keys.D))
                 direction.X += 1;
 
             if (direction != Vector2.Zero)
             {
-                currentAnimationKey = "run";
+                currentAnimationKey = "playerRun";
             }
             else
             {
-                currentAnimationKey = "idle";
+                currentAnimationKey = "playerIdle";
             }
             AnimationHandler currentAnimation = animations[currentAnimationKey];
             animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
@@ -162,7 +247,9 @@ namespace FinalProjectGameProgramming
             //update the camera position
             camera.Position = new System.Numerics.Vector2(tempVec.X, tempVec.Y);
 
-            
+            elapsedTime += gameTime.ElapsedGameTime;
+
+
 
             base.Update(gameTime);
         }
@@ -178,11 +265,46 @@ namespace FinalProjectGameProgramming
             // Draw the background, player, walls, etc.
             spriteBatch.Draw(backgroundTexture, Vector2.Zero, Color.White);
             spriteBatch.Draw(wallsTexture, Vector2.Zero, Color.White);
+
             spriteBatch.Draw(door, Vector2.Zero, Color.White);
             spriteBatch.Draw(button, Vector2.Zero, Color.White);
+
             AnimationHandler currentAnimation = animations[currentAnimationKey];
             spriteBatch.Draw(currentAnimation.Frames[currentFrame], playerPosition, Color.White);
 
+            foreach (Monster monster in monsters)
+            {
+                
+                monster.Draw(spriteBatch);
+               
+            }
+
+
+
+
+
+            Rectangle playerHitbox = new Rectangle(
+        (int)playerPosition.X + player.hitboxSideOffset, // X position plus side offset
+        (int)playerPosition.Y + player.hitboxTopOffset, // Y position plus top offset
+        player.width - 2 * player.hitboxSideOffset, // Width minus both side offsets
+        player.height - player.hitboxTopOffset);
+
+            //for Debugging hitbox Draw the semi-transparent hitbox
+            /*Color hitboxColor = new Color(Color.Red, 0.5f); // Semi-transparent red
+            spriteBatch.Draw(pixel, playerHitbox, hitboxColor);*/
+
+            spriteBatch.End();
+
+           
+
+            //has to have it's own begin to not be affected by the camera positioning
+            spriteBatch.Begin();
+            // Draw the timer
+            spriteBatch.DrawString(font, $"Time: {elapsedTime.Minutes:D2}:{elapsedTime.Seconds:D2}", new Vector2(10, 10), Color.White);
+            
+
+            // Draw the score
+            spriteBatch.DrawString(font, $"Score: {score}", new Vector2(10, 30), Color.White);
             spriteBatch.End();
 
 
@@ -206,15 +328,17 @@ namespace FinalProjectGameProgramming
             base.Draw(gameTime);
         }
 
+        
+
         private string CheckForCollision(Vector2 position)
         {
-            Rectangle playerBounds = new Rectangle((int)position.X, (int)position.Y, PLAYER_WIDTH, PLAYER_HEIGHT);
+            Rectangle playerBounds = new Rectangle((int)position.X + player.hitboxSideOffset, (int)position.Y + player.hitboxTopOffset, player.width - 2 *player.hitboxSideOffset, player.height -player.hitboxTopOffset);
 
             // Check each corner of the player's bounding box for collision
             foreach (Vector2 corner in new Vector2[]
             {
-        new Vector2(playerBounds.Left, playerBounds.Top + PLAYER_HEIGHT /3), //offseting by 3 because the height of the sprite isn't 16
-        new Vector2(playerBounds.Right, playerBounds.Top + PLAYER_HEIGHT /3),//otherwise sprite when under wall would stop early
+        new Vector2(playerBounds.Left, playerBounds.Top + player.height /3), //offseting by 3 because the height of the sprite isn't 16
+        new Vector2(playerBounds.Right, playerBounds.Top + player.height /3),//otherwise sprite when under wall would stop early
         new Vector2(playerBounds.Left, playerBounds.Bottom),
         new Vector2(playerBounds.Right, playerBounds.Bottom)
             })
@@ -227,8 +351,19 @@ namespace FinalProjectGameProgramming
                     return "wall"; // Collision detected
                 if (currentLevel.Grid[gridY,gridX] == 3)
                 {
-                    door = Content.Load<Texture2D>("Door_Open");
-                    button = Content.Load<Texture2D>("Button_pressed");
+                    if (!buttonPressed)
+                    {
+                        buttonPressed = true;
+                        buttonClickSE.Play();
+                    }
+                    //sound is off by about 8 miliseconds
+                    timingDelay++;
+                    if (timingDelay > 8)
+                    {
+                        door = Content.Load<Texture2D>("Door_Open");
+                        button = Content.Load<Texture2D>("Button_pressed");
+                    }
+
                     string csvFilePath = "C:\\PROG2370-23F\\Monogame\\FinalProjectGameProgramming\\FinalProjectGameProgramming\\Content\\IntGrid_Switch_Clicked.csv";
                     if (File.Exists(csvFilePath))
                     {
@@ -246,7 +381,19 @@ namespace FinalProjectGameProgramming
                 }
                 if (currentLevel.Grid[gridY, gridX] == 9)
                 {
-                    gameOver = true;
+                    Rectangle spikeHitbox = new Rectangle(
+        gridX * tileSize + SPIKE_HITBOX_OFFSET,
+        gridY * tileSize + SPIKE_HITBOX_OFFSET,
+        tileSize - 2 * SPIKE_HITBOX_OFFSET,
+        tileSize - 2 * SPIKE_HITBOX_OFFSET);
+
+                    // Check if the player's hitbox intersects with the spike hitbox
+                    if (playerBounds.Intersects(spikeHitbox))
+                    {
+                        // Handle collision with spike
+                        gameOver = true;
+                    }
+                    
                 }
             }
             return "nothing"; // No collision

@@ -47,11 +47,37 @@ namespace FinalProjectGameProgramming.Handlers
             }
 
             Grid = new int[rows.Count, rows[0].Length];
+            MonsterSpawnPoints = new List<int[]>();
+            RelicSpawnPoints = new ArrayList();
+            SpikeLocations = new List<int[]>();
+
             for (int i = 0; i < rows.Count; i++)
             {
                 for (int j = 0; j < rows[i].Length; j++)
                 {
                     Grid[i, j] = int.Parse(rows[i][j]);
+
+                    switch (Grid[i, j])
+                    {
+                        case 0:
+                        case 1:
+                            break;
+                        case 2:
+                            RelicSpawnPoints.Add(new int[] { j, i });
+                            break;
+                        case 4: // Monster Spawn Point
+                            MonsterSpawnPoints.Add(new int[] { j, i });
+                            break;
+                        case 5: // Player Spawn Point
+                            StartPoint = new int[] { j, i };
+                            break;
+                        case 9: // Spikes
+                            SpikeLocations.Add(new int[] { j, i });
+                            break;
+                        default:
+                            break;
+
+                    }
                     if (Grid[i, j] == 5)
                     {
                         StartPoint = new int[2];
