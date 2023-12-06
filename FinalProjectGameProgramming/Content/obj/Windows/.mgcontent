@@ -12,10 +12,14 @@
     <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/button_click.wav</File>
     <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/Button_not_pressed.png</File>
     <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/Button_pressed.png</File>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/Button_Release_01a1.png</File>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/Button_Release_01a2.png</File>
     <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/Door_Closed.png</File>
     <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/Door_Open.png</File>
     <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/futuristic_button_click.wav</File>
     <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/galleryFont.spritefont</File>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/Joshua McLean - Mountain Trials-MainMenu.mp3</File>
+    <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/KevinMacLeod-8bit Dungeon Boss-Level1Music.mp3</File>
     <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/knight_f_idle_anim_f0.png</File>
     <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/knight_f_idle_anim_f1.png</File>
     <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/knight_f_idle_anim_f2.png</File>
@@ -31,6 +35,10 @@
     <File>C:/PROG2370-23F/Monogame/FinalProjectGameProgramming/FinalProjectGameProgramming/Content/Walls_BackGround.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
