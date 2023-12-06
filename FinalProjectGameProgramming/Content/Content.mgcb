@@ -103,6 +103,30 @@
 /processorParam:TextureFormat=Color
 /build:Button_pressed.png
 
+#begin Button_Release_01a1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Button_Release_01a1.png
+
+#begin Button_Release_01a2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Button_Release_01a2.png
+
 #begin Door_Closed.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -139,6 +163,18 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:galleryFont.spritefont
+
+#begin Joshua McLean - Mountain Trials-MainMenu.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Joshua McLean - Mountain Trials-MainMenu.mp3
+
+#begin KevinMacLeod-8bit Dungeon Boss-Level1Music.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:KevinMacLeod-8bit Dungeon Boss-Level1Music.mp3
 
 #begin knight_f_idle_anim_f0.png
 /importer:TextureImporter

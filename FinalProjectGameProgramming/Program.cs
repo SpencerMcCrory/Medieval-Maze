@@ -1,3 +1,3 @@
 ﻿
-using var game = new FinalProjectGameProgramming.Game1();
+using var game = new FinalProjectGameProgramming.GameLauncher();
 game.Run();
