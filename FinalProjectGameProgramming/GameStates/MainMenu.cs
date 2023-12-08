@@ -72,6 +72,19 @@ namespace FinalProjectGameProgramming.GameStates
         public void Exit()
         {
             // Clean up resources if needed
+           
+
+            // Dispose textures if they implement IDisposable
+            buttonReleasedTexture?.Dispose();
+            buttonPressedTexture?.Dispose();
+
+            // Nullify large objects
+            buttonReleasedTexture = null;
+            buttonPressedTexture = null;
+
+
+            // Optionally, force garbage collection (use sparingly)
+            GC.Collect();
         }
 
         public void Update(GameTime gameTime)
@@ -86,7 +99,8 @@ namespace FinalProjectGameProgramming.GameStates
             if (buttons[0].isClicked)
             {
                 // Start Game button action
-                gameStateHandler.ChangeState(new PlayingState(_graphics, _content, _graphicsDevice, 1));
+                /*gameStateHandler.ChangeState(new PlayingState(_graphics, _content, _graphicsDevice, 1));*/
+                gameStateHandler.ChangeState(new PlayingState(_graphics, _content, _graphicsDevice, gameStateHandler, 1,0));
             }
             if (buttons[1].isClicked)
             {

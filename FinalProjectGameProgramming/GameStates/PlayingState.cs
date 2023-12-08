@@ -18,24 +18,30 @@ namespace FinalProjectGameProgramming.GameStates
         private GraphicsDeviceManager _graphics;
         private ContentManager _content;
         private GraphicsDevice _graphicsDevice;
+        private GameStateHandler _gameStateHandler;
 
-        public PlayingState(GraphicsDeviceManager graphics, ContentManager content, GraphicsDevice graphicsDevice, int levelNumber)
+        public PlayingState(GraphicsDeviceManager graphics, ContentManager content, GraphicsDevice graphicsDevice, GameStateHandler gameStateHandler, int levelNumber, int score)
         {
             _graphics = graphics;
             _content = content;
             _graphicsDevice = graphicsDevice;
-            InitializeLevel(levelNumber);
+            _gameStateHandler = gameStateHandler;
+            InitializeLevel(levelNumber, score);
         }
 
-        private void InitializeLevel(int levelNumber)
+        private void InitializeLevel(int levelNumber, int score)
         {
             // Instantiate Level1 with required parameters
             switch (levelNumber)
             {
                 case 1:
-                    currentLevel = new Level1(_graphics, _content, _graphicsDevice);
+                    currentLevel = new Level1(_graphics, _content, _graphicsDevice, _gameStateHandler);
                     break;
-                // Add cases for other levels if necessary
+                case 2:
+                    //currentLevel.UnloadContent();
+                    currentLevel = new Level2(_graphics, _content, _graphicsDevice, _gameStateHandler, score);
+
+                    break;
                 default:
                     throw new ArgumentException("Invalid level number");
             }
@@ -55,7 +61,8 @@ namespace FinalProjectGameProgramming.GameStates
 
         public void Exit()
         {
-            throw new NotImplementedException();
+            GC.Collect(); // Unloads all content loaded via this ContentManager
+           
         }
 
         public void Update(GameTime gameTime)

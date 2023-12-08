@@ -66,3 +66,12 @@ C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming
 C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\Joshua McLean - Mountain Trials-MainMenu.xnb
 C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\KevinMacLeod-8bit Dungeon Boss-Level1Music.wma
 C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\KevinMacLeod-8bit Dungeon Boss-Level1Music.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\compositeBGLevel2.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\Level2_Door_Closed.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\Level2_Door_Open.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\Spikes_green.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\Spikes_green_button_pressed.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\Spikes_purple.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\Spikes_purple_button_clicked.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\L2_Button_not_pressed.xnb
+C:\PROG2370-23F\Monogame\FinalProjectGameProgramming\FinalProjectGameProgramming\bin\Debug\net6.0-windows\Content\L2_Button_pressed.xnb
