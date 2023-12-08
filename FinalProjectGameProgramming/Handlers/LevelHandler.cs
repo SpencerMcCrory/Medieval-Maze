@@ -46,7 +46,7 @@ namespace FinalProjectGameProgramming.Handlers
                 }
             }
 
-            Grid = new int[rows.Count, rows[0].Length];
+            Grid = new int[rows.Count, rows[0].Length]; 
             MonsterSpawnPoints = new List<int[]>();
             RelicSpawnPoints = new ArrayList();
             SpikeLocations = new List<int[]>();

@@ -1,31 +1,28 @@
 ﻿using FinalProjectGameProgramming.Entities;
-using FinalProjectGameProgramming.GameStates;
 using FinalProjectGameProgramming.Handlers;
 using FinalProjectGameProgramming.Levels;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
-using SharpDX.Direct3D9;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection.Metadata;
-using System.Windows.Forms;
-using System.Xml.Linq;
-using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
-using Keys = Microsoft.Xna.Framework.Input.Keys;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace FinalProjectGameProgramming
 {
-    public class Level1 : Level
+    internal class Level2 : Level
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch spriteBatch;
         private Texture2D backgroundTexture;
         private Texture2D wallsTexture;
+        private Texture2D greenSpikes;
+        private Texture2D purpleSpikes;
         private Texture2D door;
         private Texture2D button;
         private LevelHandler currentLevel;
@@ -73,25 +70,25 @@ namespace FinalProjectGameProgramming
         private ContentManager _content;
         private GraphicsDevice _graphicsDevice;
         private Game _game;
-        private GameStateHandler gameStateHandler;
         private ScoreHandler score;
-       
-        internal Level1(GraphicsDeviceManager graphics, ContentManager content, GraphicsDevice graphicsDevice, GameStateHandler gameStateHandler)
+        private GameStateHandler gameStateHandler;
+
+        public Level2(GraphicsDeviceManager graphics, ContentManager content, GraphicsDevice graphicsDevice, GameStateHandler gameStateHandler, int currentScore)
         {
             // Initialize fields using passed-in graphics and content
             _graphics = graphics;
             _content = content;
             _graphicsDevice = graphicsDevice;
+            score = new ScoreHandler(currentScore);
             this.gameStateHandler = gameStateHandler;
-            score = new ScoreHandler(0);
 
         }
 
         public override void Initialize()
         {
-            
+
             //can't get relative path to work for some reason
-            string csvFilePath = "C:\\PROG2370-23F\\Monogame\\FinalProjectGameProgramming\\FinalProjectGameProgramming\\Content\\IntGrid_Switch_Not_Clicked.csv";
+            string csvFilePath = "C:\\PROG2370-23F\\Monogame\\FinalProjectGameProgramming\\FinalProjectGameProgramming\\Content\\Level2_IntGrid_Switch_Not_Clicked.csv";
             if (File.Exists(csvFilePath))
             {
                 currentLevel = new LevelHandler(csvFilePath);
@@ -106,12 +103,12 @@ namespace FinalProjectGameProgramming
             collisionHandler = new CollisionHandler(currentLevel, tileSize);
             buttonPressed = false;
 
-            
 
 
-            
+
+
         }
-        
+
         public override void LoadLevelContent()
         {
             /*spriteBatch = new SpriteBatch(_graphicsDevice);*/
@@ -126,7 +123,7 @@ namespace FinalProjectGameProgramming
             }
             animations["playerIdle"] = new AnimationHandler(playerIdleFrames, 1);
 
-            
+
 
             // Load run animation frames for player
             Texture2D[] playerRunFrames = new Texture2D[4];
@@ -152,17 +149,19 @@ namespace FinalProjectGameProgramming
 
 
             // Load textures
-            backgroundTexture = _content.Load<Texture2D>("Background");
-            wallsTexture = _content.Load<Texture2D>("Walls_BackGround");
-            door = _content.Load<Texture2D>("Door_Closed");
-            button = _content.Load<Texture2D>("Button_not_pressed");
+            backgroundTexture = _content.Load<Texture2D>("compositeBGLevel2");
+            
+            door = _content.Load<Texture2D>("Level2_Door_Closed");
+            button = _content.Load<Texture2D>("L2_Button_not_pressed");
             playerTexture = _content.Load<Texture2D>("knight_f_run_anim_f0");
+            greenSpikes = _content.Load<Texture2D>("Spikes_green");
+            purpleSpikes = _content.Load<Texture2D>("Spikes_purple");
 
             slimeTexture = _content.Load<Texture2D>("swampy_anim_f0");
             bigZombieTexture = _content.Load<Texture2D>("big_zombie_run_anim_f0");
 
             float bigZombieSpeed = 16f; // Slower speed for BigZombie
-            Vector2 bigZombieDirection = new Vector2(1, 0); // Initial direction for BigZombie
+            Vector2 bigZombieDirection = new Vector2(0, 1); // Initial direction for BigZombie
 
             float slimeMonsterSpeed = 32f; // Faster speed for SlimeMonster
             Vector2 slimeMonsterDirection = new Vector2(-1, 0); // Initial direction for SlimeMonster
@@ -279,19 +278,22 @@ namespace FinalProjectGameProgramming
 
             // Draw the background, player, walls, etc.
             spriteBatch.Draw(backgroundTexture, Vector2.Zero, Color.White);
-            spriteBatch.Draw(wallsTexture, Vector2.Zero, Color.White);
+
 
             spriteBatch.Draw(door, Vector2.Zero, Color.White);
             spriteBatch.Draw(button, Vector2.Zero, Color.White);
+            spriteBatch.Draw(greenSpikes, Vector2.Zero, Color.White);
+            spriteBatch.Draw(purpleSpikes, Vector2.Zero, Color.White);
+
 
             AnimationHandler currentAnimation = animations[currentAnimationKey];
             spriteBatch.Draw(currentAnimation.Frames[currentFrame], playerPosition, Color.White);
 
             foreach (Monster monster in monsters)
             {
-                
+
                 monster.Draw(spriteBatch);
-               
+
             }
 
 
@@ -310,13 +312,13 @@ namespace FinalProjectGameProgramming
 
             spriteBatch.End();
 
-           
+
 
             //has to have it's own begin to not be affected by the camera positioning
             spriteBatch.Begin();
             // Draw the timer
             spriteBatch.DrawString(font, $"Time: {elapsedTime.Minutes:D2}:{elapsedTime.Seconds:D2}", new Vector2(10, 10), Color.White);
-            
+
 
             // Draw the score
             spriteBatch.DrawString(font, $"Score: {score.GetScore()}", new Vector2(10, 30), Color.White);
@@ -325,15 +327,10 @@ namespace FinalProjectGameProgramming
 
             //has to have it's own begin and and end otherwise wont pop up
             spriteBatch.Begin();
-           
+
             if (levelComplete)
             {
-                
-                int totalTime = (int)elapsedTime.TotalSeconds;
-                score.CalculateTimeScore(totalTime);
-                string transitionMessage = "Congratulations, you beat level 1!\nYour score is " + score.GetScore() + "\nPress ENTER to start Level 2.";
-                IGameState nextState = new PlayingState(_graphics,_content,_graphicsDevice,gameStateHandler,2,score.CurrentScore);
-                gameStateHandler.ChangeState(new LevelTransitionState(gameStateHandler, font,transitionMessage , nextState));
+                spriteBatch.DrawString(_content.Load<SpriteFont>("galleryFont"), "Winner!", new Vector2(100, 100), Color.White);
             }
             if (gameOver)
             {
@@ -342,12 +339,12 @@ namespace FinalProjectGameProgramming
 
 
             spriteBatch.End();
-     
+
         }
 
         private string CheckForCollision(Vector2 position)
         {
-            Rectangle playerBounds = new Rectangle((int)position.X + player.hitboxSideOffset, (int)position.Y + player.hitboxTopOffset, player.width - 2 *player.hitboxSideOffset, player.height -player.hitboxTopOffset);
+            Rectangle playerBounds = new Rectangle((int)position.X + player.hitboxSideOffset, (int)position.Y + player.hitboxTopOffset, player.width - 2 * player.hitboxSideOffset, player.height - player.hitboxTopOffset);
 
             // Check each corner of the player's bounding box for collision
             foreach (Vector2 corner in new Vector2[]
@@ -364,23 +361,25 @@ namespace FinalProjectGameProgramming
 
                 if (currentLevel.Grid[gridY, gridX] == 1)
                     return "wall"; // Collision detected
-                if (currentLevel.Grid[gridY,gridX] == 3)
+                if (currentLevel.Grid[gridY, gridX] == 3)
                 {
                     if (!buttonPressed)
                     {
                         buttonPressed = true;
                         buttonClickSE.Play();
-                        score.AddScore(100);
+                        score.AddScore(200);
                     }
                     //sound is off by about 8 miliseconds
                     timingDelay++;
                     if (timingDelay > 8)
                     {
-                        door = _content.Load<Texture2D>("Door_Open");
-                        button = _content.Load<Texture2D>("Button_pressed");
+                        door = _content.Load<Texture2D>("Level2_Door_Open");
+                        button = _content.Load<Texture2D>("L2_Button_pressed");
+                        greenSpikes = _content.Load<Texture2D>("Spikes_green_button_pressed");
+                        purpleSpikes = _content.Load<Texture2D>("Spikes_purple_button_clicked");
                     }
 
-                    string csvFilePath = "C:\\PROG2370-23F\\Monogame\\FinalProjectGameProgramming\\FinalProjectGameProgramming\\Content\\IntGrid_Switch_Clicked.csv";
+                    string csvFilePath = "C:\\PROG2370-23F\\Monogame\\FinalProjectGameProgramming\\FinalProjectGameProgramming\\Content\\Level2_IntGrid_Switch_Clicked.csv";
                     if (File.Exists(csvFilePath))
                     {
                         currentLevel = new LevelHandler(csvFilePath);
@@ -389,7 +388,7 @@ namespace FinalProjectGameProgramming
                     {
                         throw new FileNotFoundException("Unable to load walls.csv. File not found.");
                     }
-                    return "button";
+                    /*return "button";*/
                 }
                 if (currentLevel.Grid[gridY, gridX] == 6)
                 {
@@ -409,7 +408,7 @@ namespace FinalProjectGameProgramming
                         // Handle collision with spike
                         gameOver = true;
                     }
-                    
+
                 }
             }
             return "nothing"; // No collision
