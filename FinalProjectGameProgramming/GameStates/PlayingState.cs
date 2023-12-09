@@ -15,6 +15,7 @@ namespace FinalProjectGameProgramming.GameStates
     internal class PlayingState : IGameState
     {
         private Level currentLevel;
+        private Level buttonPressedLevel;
         private GraphicsDeviceManager _graphics;
         private ContentManager _content;
         private GraphicsDevice _graphicsDevice;
@@ -36,10 +37,12 @@ namespace FinalProjectGameProgramming.GameStates
             {
                 case 1:
                     currentLevel = new Level1(_graphics, _content, _graphicsDevice, _gameStateHandler);
+
                     break;
                 case 2:
                     //currentLevel.UnloadContent();
                     currentLevel = new Level2(_graphics, _content, _graphicsDevice, _gameStateHandler, score);
+                    buttonPressedLevel = new Level2(_graphics, _content, _graphicsDevice, _gameStateHandler, score);
 
                     break;
                 default:

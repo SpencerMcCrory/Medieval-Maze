@@ -6,11 +6,13 @@ namespace FinalProjectGameProgramming.Entities
 {
     abstract class Monster
     {
+        public string Name { get; set; }
         public Vector2 Position { get; protected set; }
         public Texture2D Texture { get; protected set; }
 
         public float Speed { get; protected set; }
         public Vector2 Direction { get; protected set; }
+        public Rectangle Hitbox { get; set; }
 
         protected Monster(Texture2D texture, Vector2 position, float initialSpeed, Vector2 initialDirection)
         {

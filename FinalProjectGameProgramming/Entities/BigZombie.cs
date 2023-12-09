@@ -3,6 +3,7 @@ using FinalProjectGameProgramming.Handlers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Threading;
 
 internal class BigZombie : Monster
 {
@@ -16,6 +17,18 @@ internal class BigZombie : Monster
 
     private int hitboxInsetX;
     private int hitboxInsetY;
+    public Rectangle Hitbox
+    {
+        get
+        {
+            return new Rectangle(
+                        (int)Position.X + 20,
+                        (int)Position.Y + 10,
+                        Texture.Width - 2 * 20,
+                        Texture.Height - 10);
+        }
+
+    }
 
     public BigZombie(Texture2D[] runFrames, Vector2 position, CollisionHandler collisionHandler, float speed, Vector2 direction)
         : base(runFrames[0], position, speed, direction) // Include speed and direction
@@ -30,6 +43,7 @@ internal class BigZombie : Monster
         hitboxInsetX = 5; // Additional inset for X-axis
         hitboxInsetY = 60; // Additional inset for Y-axis
         runAnimation = new AnimationHandler(runFrames, 0.1);
+        Name = "Big Zombie";
     }
 
     public override void Update(GameTime gameTime)

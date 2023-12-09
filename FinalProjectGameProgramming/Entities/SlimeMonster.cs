@@ -33,6 +33,7 @@ namespace FinalProjectGameProgramming.Entities
             HitboxTopOffset = 0;
             HitboxSideOffset = 0;
             runAnimation = new AnimationHandler(runFrames, 0.1);
+            Name = "Slime";
         }
 
         public override void Update(GameTime gameTime)
