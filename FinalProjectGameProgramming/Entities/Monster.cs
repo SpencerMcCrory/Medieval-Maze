@@ -33,6 +33,30 @@ namespace FinalProjectGameProgramming.Entities
         }
 
         protected abstract void CheckForCollisionAndChangeDirection();
+         
+        /**
+         * Changes the direction of the monster randomly
+         */
+        public Vector2 ChangeDirectionRandomly()
+        {
+            Random random = new Random();
+            int randomDirection = random.Next(0, 4); // Generates a random number between 0 and 3
+
+            // Assign new direction based on the random number
+            switch (randomDirection)
+            {
+                case 0:
+                    return new Vector2(1, 0); // Right
+                case 1:
+                    return new Vector2(-1, 0); // Left
+                case 2:
+                    return new Vector2(0, 1); // Down
+                case 3:
+                    return new Vector2(0, -1); // Up
+                default:
+                    return new Vector2(0, -1); // No movement
+            }
+        }
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {

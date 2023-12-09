@@ -111,11 +111,6 @@ namespace FinalProjectGameProgramming
 			camera = new CameraHandler();
 			collisionHandler = new CollisionHandler(currentLevel, tileSize);
 			buttonPressed = false;
-
-
-
-
-
 		}
 
 		public override void LoadLevelContent()
@@ -270,15 +265,11 @@ namespace FinalProjectGameProgramming
 			camera.Position = new System.Numerics.Vector2(tempVec.X, tempVec.Y);
 
 			elapsedTime += gameTime.ElapsedGameTime;
-
-
-
 		}
 
 		public override void DrawLevel(SpriteBatch spriteBatch)
 		{
 			_graphicsDevice.Clear(Color.Black);
-
 
 			// Use the camera's view matrix
 			spriteBatch.Begin(transformMatrix: camera.GetViewMatrix());
@@ -295,46 +286,35 @@ namespace FinalProjectGameProgramming
 
 			foreach (Monster monster in monsters)
 			{
-
 				monster.Draw(spriteBatch);
-
 			}
 
-
-
-
-
 			Rectangle playerHitbox = new Rectangle(
-		(int)playerPosition.X + player.hitboxSideOffset, // X position plus side offset
-		(int)playerPosition.Y + player.hitboxTopOffset, // Y position plus top offset
-		player.width - 2 * player.hitboxSideOffset, // Width minus both side offsets
-		player.height - player.hitboxTopOffset);
+				(int)playerPosition.X + player.hitboxSideOffset, // X position plus side offset
+				(int)playerPosition.Y + player.hitboxTopOffset, // Y position plus top offset
+				player.width - 2 * player.hitboxSideOffset, // Width minus both side offsets
+				player.height - player.hitboxTopOffset
+			);
 
 			//for Debugging hitbox Draw the semi-transparent hitbox
 			/*Color hitboxColor = new Color(Color.Red, 0.5f); // Semi-transparent red
             spriteBatch.Draw(pixel, playerHitbox, hitboxColor);*/
 
 			spriteBatch.End();
-
-
-
 			//has to have it's own begin to not be affected by the camera positioning
 			spriteBatch.Begin();
 			// Draw the timer
 			spriteBatch.DrawString(font, $"Time: {elapsedTime.Minutes:D2}:{elapsedTime.Seconds:D2}", new Vector2(10, 10), Color.White);
 
-
 			// Draw the score
 			spriteBatch.DrawString(font, $"Score: {score.GetScore()}", new Vector2(10, 30), Color.White);
 			spriteBatch.End();
-
 
 			//has to have it's own begin and and end otherwise wont pop up
 			spriteBatch.Begin();
 
 			if (levelComplete)
 			{
-
 				int totalTime = (int)elapsedTime.TotalSeconds;
 				score.CalculateTimeScore(totalTime);
 				string transitionMessage = "Congratulations, you beat level 1!\nYour score is " + score.GetScore() + "\nPress ENTER to start Level 2.";
@@ -343,12 +323,14 @@ namespace FinalProjectGameProgramming
 			}
 			if (gameOver)
 			{
-				spriteBatch.DrawString(_content.Load<SpriteFont>("galleryFont"), "Game Over. You Died.", new Vector2(100, 100), Color.White);
+				// spriteBatch.DrawString(_content.Load<SpriteFont>("galleryFont"), "Game Over. You Died.", new Vector2(100, 100), Color.White);
+				int totalTime = (int)elapsedTime.TotalSeconds;
+				score.CalculateTimeScore(totalTime);
+				string transitionMessage = "Game Over!\nYour score is " + score.GetScore() + "\nPress ENTER to continue.";
+				IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
+				gameStateHandler.ChangeState(new GameOverState(gameStateHandler, font, transitionMessage, nextState));
 			}
-
-
 			spriteBatch.End();
-
 		}
 
 		private string CheckForCollision(Vector2 position)
@@ -358,10 +340,10 @@ namespace FinalProjectGameProgramming
 			// Check each corner of the player's bounding box for collision
 			foreach (Vector2 corner in new Vector2[]
 			{
-		new Vector2(playerBounds.Left, playerBounds.Top + player.height /3), //offseting by 3 because the height of the sprite isn't 16
-        new Vector2(playerBounds.Right, playerBounds.Top + player.height /3),//otherwise sprite when under wall would stop early
-        new Vector2(playerBounds.Left, playerBounds.Bottom),
-		new Vector2(playerBounds.Right, playerBounds.Bottom)
+				new Vector2(playerBounds.Left, playerBounds.Top + player.height /3), //offseting by 3 because the height of the sprite isn't 16
+				new Vector2(playerBounds.Right, playerBounds.Top + player.height /3),//otherwise sprite when under wall would stop early
+				new Vector2(playerBounds.Left, playerBounds.Bottom),
+				new Vector2(playerBounds.Right, playerBounds.Bottom)
 			})
 			{
 				int gridX = (int)corner.X / tileSize;
@@ -405,10 +387,11 @@ namespace FinalProjectGameProgramming
 				if (currentLevel.Grid[gridY, gridX] == 9)
 				{
 					Rectangle spikeHitbox = new Rectangle(
-		gridX * tileSize + SPIKE_HITBOX_OFFSET,
-		gridY * tileSize + SPIKE_HITBOX_OFFSET,
-		tileSize - 2 * SPIKE_HITBOX_OFFSET,
-		tileSize - 2 * SPIKE_HITBOX_OFFSET);
+						gridX * tileSize + SPIKE_HITBOX_OFFSET,
+						gridY * tileSize + SPIKE_HITBOX_OFFSET,
+						tileSize - 2 * SPIKE_HITBOX_OFFSET,
+						tileSize - 2 * SPIKE_HITBOX_OFFSET
+					);
 
 					// Check if the player's hitbox intersects with the spike hitbox
 					if (playerBounds.Intersects(spikeHitbox))

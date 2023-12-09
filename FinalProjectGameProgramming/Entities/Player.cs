@@ -11,7 +11,6 @@ namespace FinalProjectGameProgramming.Entities
 {
     internal class Player
     {
-
         public Player()
         {
             speed = 300f;

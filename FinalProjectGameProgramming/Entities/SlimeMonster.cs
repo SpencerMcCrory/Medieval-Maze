@@ -30,7 +30,7 @@ namespace FinalProjectGameProgramming.Entities
             // Initialize properties based on the texture or specific values
             Width = runFrames[0].Width;
             Height = runFrames[0].Height;
-            HitboxTopOffset = 0; // Set these based on your game's needs
+            HitboxTopOffset = 0;
             HitboxSideOffset = 0;
             runAnimation = new AnimationHandler(runFrames, 0.1);
         }
@@ -54,6 +54,8 @@ namespace FinalProjectGameProgramming.Entities
             {
                 // Reverse direction
                 Direction = -Direction;
+                // When change direction randomly. there is a chance that the monster will get stuck in a wall because of the HitboxSideOffset
+                // Direction = ChangeDirectionRandomly();
             }
         }
 
