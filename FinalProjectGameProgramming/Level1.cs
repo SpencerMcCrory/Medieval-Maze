@@ -313,22 +313,24 @@ namespace FinalProjectGameProgramming
 			//has to have it's own begin and and end otherwise wont pop up
 			spriteBatch.Begin();
 
-			if (levelComplete)
+			// If level is complete or game over, display the appropriate message and score
+			if (levelComplete || gameOver)
 			{
 				int totalTime = (int)elapsedTime.TotalSeconds;
 				score.CalculateTimeScore(totalTime);
-				string transitionMessage = "Congratulations, you beat level 1!\nYour score is " + score.GetScore() + "\nPress ENTER to start Level 2.";
-				IGameState nextState = new PlayingState(_graphics, _content, _graphicsDevice, gameStateHandler, 2, score.CurrentScore);
-				gameStateHandler.ChangeState(new LevelTransitionState(gameStateHandler, font, transitionMessage, nextState));
-			}
-			if (gameOver)
-			{
-				// spriteBatch.DrawString(_content.Load<SpriteFont>("galleryFont"), "Game Over. You Died.", new Vector2(100, 100), Color.White);
-				int totalTime = (int)elapsedTime.TotalSeconds;
-				score.CalculateTimeScore(totalTime);
-				string transitionMessage = "Game Over!\nYour score is " + score.GetScore() + "\nPress ENTER to continue.";
-				IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
-				gameStateHandler.ChangeState(new GameOverState(gameStateHandler, font, transitionMessage, nextState));
+				if (levelComplete)
+				{
+					string transitionMessage = "Congratulations, you beat level 1!\nYour score is " + score.GetScore() + "\nPress ENTER to start Level 2.";
+					IGameState nextState = new PlayingState(_graphics, _content, _graphicsDevice, gameStateHandler, 2, score.CurrentScore);
+					gameStateHandler.ChangeState(new LevelTransitionState(gameStateHandler, font, transitionMessage, nextState));
+				}
+				if (gameOver)
+				{
+					// spriteBatch.DrawString(_content.Load<SpriteFont>("galleryFont"), "Game Over. You Died.", new Vector2(100, 100), Color.White);
+					string transitionMessage = "Game Over!\nYour score is " + score.GetScore() + "\nPress ENTER to continue.";
+					IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
+					gameStateHandler.ChangeState(new GameOverState(gameStateHandler, font, transitionMessage, nextState));
+				}
 			}
 			spriteBatch.End();
 		}
