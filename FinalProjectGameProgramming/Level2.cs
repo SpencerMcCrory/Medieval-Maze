@@ -61,11 +61,9 @@ namespace FinalProjectGameProgramming
 
 		Texture2D pixel;
 
-
 		SoundEffect buttonClickSE;
 
 		private TimeSpan elapsedTime = TimeSpan.Zero;
-
 
 		private ContentManager _content;
 		private GraphicsDevice _graphicsDevice;
@@ -105,10 +103,6 @@ namespace FinalProjectGameProgramming
 			camera = new CameraHandler();
 			collisionHandler = new CollisionHandler(currentLevel, tileSize);
 			buttonPressed = false;
-
-
-
-
 
 		}
 
@@ -222,7 +216,6 @@ namespace FinalProjectGameProgramming
 			// Movement input
 			Vector2 direction = Vector2.Zero;
 
-
 			KeyboardState state = Keyboard.GetState();
 			if (state.IsKeyDown(Keys.Up) || state.IsKeyDown(Keys.W))
 				direction.Y -= 1;
@@ -266,9 +259,6 @@ namespace FinalProjectGameProgramming
 			camera.Position = new System.Numerics.Vector2(tempVec.X, tempVec.Y);
 
 			elapsedTime += gameTime.ElapsedGameTime;
-
-
-
 		}
 
 		public override void DrawLevel(SpriteBatch spriteBatch)
@@ -282,12 +272,10 @@ namespace FinalProjectGameProgramming
 			// Draw the background, player, walls, etc.
 			spriteBatch.Draw(backgroundTexture, Vector2.Zero, Color.White);
 
-
 			spriteBatch.Draw(door, Vector2.Zero, Color.White);
 			spriteBatch.Draw(button, Vector2.Zero, Color.White);
 			spriteBatch.Draw(greenSpikes, Vector2.Zero, Color.White);
 			spriteBatch.Draw(purpleSpikes, Vector2.Zero, Color.White);
-
 
 			AnimationHandler currentAnimation = animations[currentAnimationKey];
 			spriteBatch.Draw(currentAnimation.Frames[currentFrame], playerPosition, Color.White);
@@ -298,16 +286,12 @@ namespace FinalProjectGameProgramming
 				monster.Draw(spriteBatch);
 
 			}
-
-
-
-
-
 			Rectangle playerHitbox = new Rectangle(
-		(int)playerPosition.X + player.hitboxSideOffset, // X position plus side offset
-		(int)playerPosition.Y + player.hitboxTopOffset, // Y position plus top offset
-		player.width - 2 * player.hitboxSideOffset, // Width minus both side offsets
-		player.height - player.hitboxTopOffset);
+				(int)playerPosition.X + player.hitboxSideOffset, // X position plus side offset
+				(int)playerPosition.Y + player.hitboxTopOffset, // Y position plus top offset
+				player.width - 2 * player.hitboxSideOffset, // Width minus both side offsets
+				player.height - player.hitboxTopOffset
+			);
 
 			//for Debugging hitbox Draw the semi-transparent hitbox
 			/*Color hitboxColor = new Color(Color.Red, 0.5f); // Semi-transparent red
@@ -350,12 +334,11 @@ namespace FinalProjectGameProgramming
 			Rectangle playerBounds = new Rectangle((int)position.X + player.hitboxSideOffset, (int)position.Y + player.hitboxTopOffset, player.width - 2 * player.hitboxSideOffset, player.height - player.hitboxTopOffset);
 
 			// Check each corner of the player's bounding box for collision
-			foreach (Vector2 corner in new Vector2[]
-			{
-		new Vector2(playerBounds.Left, playerBounds.Top + player.height /3), //offseting by 3 because the height of the sprite isn't 16
-        new Vector2(playerBounds.Right, playerBounds.Top + player.height /3),//otherwise sprite when under wall would stop early
-        new Vector2(playerBounds.Left, playerBounds.Bottom),
-		new Vector2(playerBounds.Right, playerBounds.Bottom)
+			foreach (Vector2 corner in new Vector2[] {
+				new Vector2(playerBounds.Left, playerBounds.Top + player.height /3), //offseting by 3 because the height of the sprite isn't 16
+				new Vector2(playerBounds.Right, playerBounds.Top + player.height /3),//otherwise sprite when under wall would stop early
+				new Vector2(playerBounds.Left, playerBounds.Bottom),
+				new Vector2(playerBounds.Right, playerBounds.Bottom)
 			})
 			{
 				int gridX = (int)corner.X / tileSize;
@@ -401,10 +384,11 @@ namespace FinalProjectGameProgramming
 				if (currentLevel.Grid[gridY, gridX] == 9)
 				{
 					Rectangle spikeHitbox = new Rectangle(
-		gridX * tileSize + SPIKE_HITBOX_OFFSET,
-		gridY * tileSize + SPIKE_HITBOX_OFFSET,
-		tileSize - 2 * SPIKE_HITBOX_OFFSET,
-		tileSize - 2 * SPIKE_HITBOX_OFFSET);
+						gridX * tileSize + SPIKE_HITBOX_OFFSET,
+						gridY * tileSize + SPIKE_HITBOX_OFFSET,
+						tileSize - 2 * SPIKE_HITBOX_OFFSET,
+						tileSize - 2 * SPIKE_HITBOX_OFFSET
+					);
 
 					// Check if the player's hitbox intersects with the spike hitbox
 					if (playerBounds.Intersects(spikeHitbox))
