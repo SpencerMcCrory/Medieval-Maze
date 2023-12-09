@@ -21,7 +21,7 @@ namespace FinalProjectGameProgramming.Handlers
         public List<int[]> SpikeLocations { get; private set; }
 
         //in the int grid - here is what the values mean:
-        //0 = nothing/floor
+        //0 = floor
         //1 = wall
         //2 = Relic
         //3 = Switch/Button
@@ -31,6 +31,7 @@ namespace FinalProjectGameProgramming.Handlers
         //8 = Power Up
         //9 = Spikes
         //10 = door
+        //11 = no floor (on level 2)
 
         public LevelHandler(string csvFilePath)
         {

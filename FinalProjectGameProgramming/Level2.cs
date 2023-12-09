@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FinalProjectGameProgramming.GameStates;
 
 namespace FinalProjectGameProgramming
 {
@@ -27,7 +28,6 @@ namespace FinalProjectGameProgramming
 		private Texture2D button;
 		private LevelHandler currentLevel;
 		private int tileSize = 64;
-		private Vector2 playerPosition;
 		private float movementDelta;
 		const int SPIKE_HITBOX_OFFSET = 10;
 		private Texture2D playerTexture;
@@ -35,7 +35,9 @@ namespace FinalProjectGameProgramming
 		Player player;
 		Texture2D[] slimeRunFrames;
 		private Texture2D bigZombieTexture;
-		List<Monster> monsters = new List<Monster>();
+		Rectangle monsterHitbox;
+
+        List<Monster> monsters = new List<Monster>();
 
 		int timingDelay = 0;
 
@@ -61,11 +63,9 @@ namespace FinalProjectGameProgramming
 
 		Texture2D pixel;
 
-
 		SoundEffect buttonClickSE;
 
 		private TimeSpan elapsedTime = TimeSpan.Zero;
-
 
 		private ContentManager _content;
 		private GraphicsDevice _graphicsDevice;
@@ -101,14 +101,10 @@ namespace FinalProjectGameProgramming
 				throw new FileNotFoundException("Unable to load walls.csv. File not found.");
 			}
 			player = new Player();
-			playerPosition = new Vector2(currentLevel.StartPoint[0] * tileSize, currentLevel.StartPoint[1] * tileSize); // Starting position of the player
+			player.Position = new Vector2(currentLevel.StartPoint[0] * tileSize, currentLevel.StartPoint[1] * tileSize); // Starting position of the player
 			camera = new CameraHandler();
 			collisionHandler = new CollisionHandler(currentLevel, tileSize);
 			buttonPressed = false;
-
-
-
-
 
 		}
 
@@ -163,10 +159,10 @@ namespace FinalProjectGameProgramming
 			slimeTexture = _content.Load<Texture2D>("swampy_anim_f0");
 			bigZombieTexture = _content.Load<Texture2D>("big_zombie_run_anim_f0");
 
-			float bigZombieSpeed = 16f; // Slower speed for BigZombie
+			float bigZombieSpeed = 32f; // Slower speed for BigZombie
 			Vector2 bigZombieDirection = new Vector2(0, 1); // Initial direction for BigZombie
 
-			float slimeMonsterSpeed = 32f; // Faster speed for SlimeMonster
+			float slimeMonsterSpeed = 64f; // Faster speed for SlimeMonster
 			Vector2 slimeMonsterDirection = new Vector2(-1, 0); // Initial direction for SlimeMonster
 
 
@@ -183,33 +179,56 @@ namespace FinalProjectGameProgramming
 					monsters.Add(new SlimeMonster(slimeRunFrames, position, collisionHandler, slimeMonsterSpeed, slimeMonsterDirection));
 				}
 			}
-
-			buttonClickSE = _content.Load<SoundEffect>("futuristic_button_click");
+			//used for drawing hitboxes
+            pixel = new Texture2D(_graphicsDevice, 1, 1);
+            pixel.SetData(new[] { Color.White });
+            buttonClickSE = _content.Load<SoundEffect>("futuristic_button_click");
 			font = _content.Load<SpriteFont>("galleryFont");
 
-			//hitbox debug
-			/*pixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
-            pixel.SetData(new[] { Color.White });*/
 		}
 
 		public override void UpdateLevel(GameTime gameTime)
 		{
-			/*if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            /*if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();*/
 
-			//will be used to update the monsters
-			foreach (Monster monster in monsters)
+            Rectangle playerHitbox = new Rectangle(
+                (int)player.Position.X + player.hitboxSideOffset,
+                (int)player.Position.Y + player.hitboxTopOffset,
+                player.width - 2 * player.hitboxSideOffset,
+                player.height - player.hitboxTopOffset);
+
+            //will be used to update the monsters
+            foreach (Monster monster in monsters)
 			{
 				monster.Update(gameTime);
-				Rectangle monsterBounds = new Rectangle((int)monster.Position.X,
-														(int)monster.Position.Y,
-														monster.Texture.Width,
-														monster.Texture.Height);
-				if (collisionHandler.CheckCollisionWithEnvironment(monsterBounds))
+				if (monster.Name == "Big Zombie")
+				{
+                    monsterHitbox = new Rectangle(
+												(int)monster.Position.X + 20,
+												(int)monster.Position.Y + 10,
+												monster.Texture.Width - 2 * 15,
+												monster.Texture.Height - 10
+                    );
+                }
+				else
+				{
+                    monsterHitbox = new Rectangle(
+												(int)monster.Position.X,
+                                                (int)monster.Position.Y,
+                                                monster.Texture.Width,
+                                                monster.Texture.Height);
+                }
+				
+				if (collisionHandler.CheckCollisionWithEnvironment(monsterHitbox))
 				{
 					// Handle monster collision with the environment
 				}
-			}
+                if (playerHitbox.Intersects(monsterHitbox))
+                {
+                    gameOver = true;
+                }
+            }
 			movementDelta = (float)gameTime.ElapsedGameTime.TotalSeconds * player.speed;
 
 			animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
@@ -221,7 +240,6 @@ namespace FinalProjectGameProgramming
 
 			// Movement input
 			Vector2 direction = Vector2.Zero;
-
 
 			KeyboardState state = Keyboard.GetState();
 			if (state.IsKeyDown(Keys.Up) || state.IsKeyDown(Keys.W))
@@ -249,26 +267,23 @@ namespace FinalProjectGameProgramming
 				animationTimer -= currentAnimation.TimePerFrame;
 			}
 
-			Vector2 newPlayerPosition = playerPosition + direction * movementDelta;
+			Vector2 newPlayerPosition = player.Position + direction * movementDelta;
 
 			string collidingWith = CheckForCollision(newPlayerPosition);
 			// Check for collisions with the wall
 			if (collidingWith != "wall")
 			{
 				// Apply movement
-				playerPosition = newPlayerPosition;
+				player.Position = newPlayerPosition;
 			}
 
 			//get the center of the window
-			Microsoft.Xna.Framework.Vector2 tempVec = playerPosition - new Microsoft.Xna.Framework.Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
+			Microsoft.Xna.Framework.Vector2 tempVec = player.Position - new Microsoft.Xna.Framework.Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
 
 			//update the camera position
 			camera.Position = new System.Numerics.Vector2(tempVec.X, tempVec.Y);
 
 			elapsedTime += gameTime.ElapsedGameTime;
-
-
-
 		}
 
 		public override void DrawLevel(SpriteBatch spriteBatch)
@@ -282,43 +297,52 @@ namespace FinalProjectGameProgramming
 			// Draw the background, player, walls, etc.
 			spriteBatch.Draw(backgroundTexture, Vector2.Zero, Color.White);
 
-
 			spriteBatch.Draw(door, Vector2.Zero, Color.White);
 			spriteBatch.Draw(button, Vector2.Zero, Color.White);
 			spriteBatch.Draw(greenSpikes, Vector2.Zero, Color.White);
 			spriteBatch.Draw(purpleSpikes, Vector2.Zero, Color.White);
 
-
 			AnimationHandler currentAnimation = animations[currentAnimationKey];
-			spriteBatch.Draw(currentAnimation.Frames[currentFrame], playerPosition, Color.White);
+			spriteBatch.Draw(currentAnimation.Frames[currentFrame], player.Position, Color.White);
 
 			foreach (Monster monster in monsters)
 			{
+                //debugging hitbox
+                if (monster.Name == "Big Zombie")
+                {
+                    monsterHitbox = new Rectangle(
+                        (int)monster.Position.X + 20,
+                        (int)monster.Position.Y + 10,
+                        monster.Texture.Width - 2 * 20,
+                        monster.Texture.Height - 10
+                    );
+                }
+                else
+                {
+                    monsterHitbox = new Rectangle(
+                        (int)monster.Position.X,
+                        (int)monster.Position.Y,
+                        monster.Texture.Width,
+                        monster.Texture.Height
+                    );
+                }
 
-				monster.Draw(spriteBatch);
+                // Draw the hitbox as a red rectangle
+                spriteBatch.Draw(pixel, monsterHitbox, Color.Red * 0.5f);
+                monster.Draw(spriteBatch);
 
-			}
+            }
 
+            //for Debugging hitbox Draw the semi - transparent hitbox
+            Color hitboxColorEnvironment = new Color(Color.Red, 0.5f); // Semi-transparent red
+            spriteBatch.Draw(pixel, player.EnvironmentHitbox, hitboxColorEnvironment);
+            Color hitboxColorMonster = new Color(Color.Red, 0.5f); // Semi-transparent red
+            spriteBatch.Draw(pixel, player.MonsterHitbox, hitboxColorMonster);
 
+            spriteBatch.End();
 
-
-
-			Rectangle playerHitbox = new Rectangle(
-		(int)playerPosition.X + player.hitboxSideOffset, // X position plus side offset
-		(int)playerPosition.Y + player.hitboxTopOffset, // Y position plus top offset
-		player.width - 2 * player.hitboxSideOffset, // Width minus both side offsets
-		player.height - player.hitboxTopOffset);
-
-			//for Debugging hitbox Draw the semi-transparent hitbox
-			/*Color hitboxColor = new Color(Color.Red, 0.5f); // Semi-transparent red
-            spriteBatch.Draw(pixel, playerHitbox, hitboxColor);*/
-
-			spriteBatch.End();
-
-
-
-			//has to have it's own begin to not be affected by the camera positioning
-			spriteBatch.Begin();
+            //has to have it's own begin to not be affected by the camera positioning
+            spriteBatch.Begin();
 			// Draw the timer
 			spriteBatch.DrawString(font, $"Time: {elapsedTime.Minutes:D2}:{elapsedTime.Seconds:D2}", new Vector2(10, 10), Color.White);
 
@@ -333,29 +357,34 @@ namespace FinalProjectGameProgramming
 
 			if (levelComplete)
 			{
-				spriteBatch.DrawString(_content.Load<SpriteFont>("galleryFont"), "Winner!", new Vector2(100, 100), Color.White);
-			}
+                string transitionMessage = "Congratulations,you beat the game!\nYour score was " + score.GetScore() + "\nPress ENTER to continue.";
+                IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
+                gameStateHandler.ChangeState(new GameOverState(gameStateHandler, font, transitionMessage, nextState));
+            }
 			if (gameOver)
 			{
-				spriteBatch.DrawString(_content.Load<SpriteFont>("galleryFont"), "Game Over. You Died.", new Vector2(100, 100), Color.White);
-			}
+                string transitionMessage = "Game Over!\nYour score is " + score.GetScore() + "\nPress ENTER to continue.";
+                IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
+                gameStateHandler.ChangeState(new GameOverState(gameStateHandler, font, transitionMessage, nextState));
 
-
+            }
 			spriteBatch.End();
-
 		}
 
 		private string CheckForCollision(Vector2 position)
 		{
-			Rectangle playerBounds = new Rectangle((int)position.X + player.hitboxSideOffset, (int)position.Y + player.hitboxTopOffset, player.width - 2 * player.hitboxSideOffset, player.height - player.hitboxTopOffset);
+			Rectangle playerHitbox = new Rectangle(
+				(int)position.X + player.hitboxSideOffset, 
+				(int)position.Y + player.hitboxTopOffset, 
+				player.width - 2 * player.hitboxSideOffset, 
+				player.height - player.hitboxTopOffset);
 
 			// Check each corner of the player's bounding box for collision
-			foreach (Vector2 corner in new Vector2[]
-			{
-		new Vector2(playerBounds.Left, playerBounds.Top + player.height /3), //offseting by 3 because the height of the sprite isn't 16
-        new Vector2(playerBounds.Right, playerBounds.Top + player.height /3),//otherwise sprite when under wall would stop early
-        new Vector2(playerBounds.Left, playerBounds.Bottom),
-		new Vector2(playerBounds.Right, playerBounds.Bottom)
+			foreach (Vector2 corner in new Vector2[] {
+				new Vector2(playerHitbox.Left, playerHitbox.Top + player.height /3), //offseting by 3 because the height of the sprite isn't 16
+				new Vector2(playerHitbox.Right, playerHitbox.Top + player.height /3),//otherwise sprite when under wall would stop early
+				new Vector2(playerHitbox.Left, playerHitbox.Bottom),
+				new Vector2(playerHitbox.Right, playerHitbox.Bottom)
 			})
 			{
 				int gridX = (int)corner.X / tileSize;
@@ -392,7 +421,7 @@ namespace FinalProjectGameProgramming
 					{
 						throw new FileNotFoundException("Unable to load walls.csv. File not found.");
 					}
-					/*return "button";*/
+					return "button";
 				}
 				if (currentLevel.Grid[gridY, gridX] == 6)
 				{
@@ -401,20 +430,39 @@ namespace FinalProjectGameProgramming
 				if (currentLevel.Grid[gridY, gridX] == 9)
 				{
 					Rectangle spikeHitbox = new Rectangle(
-		gridX * tileSize + SPIKE_HITBOX_OFFSET,
-		gridY * tileSize + SPIKE_HITBOX_OFFSET,
-		tileSize - 2 * SPIKE_HITBOX_OFFSET,
-		tileSize - 2 * SPIKE_HITBOX_OFFSET);
+						gridX * tileSize + SPIKE_HITBOX_OFFSET,
+						gridY * tileSize + SPIKE_HITBOX_OFFSET,
+						tileSize - 2 * SPIKE_HITBOX_OFFSET,
+						tileSize - 2 * SPIKE_HITBOX_OFFSET
+					);
 
 					// Check if the player's hitbox intersects with the spike hitbox
-					if (playerBounds.Intersects(spikeHitbox))
+					if (playerHitbox.Intersects(spikeHitbox))
 					{
 						// Handle collision with spike
 						gameOver = true;
+						return "spikes";
 					}
 
 				}
-			}
+                if (currentLevel.Grid[gridY, gridX] == 11)
+                {
+                    Rectangle noFloorHitbox = new Rectangle(
+                        gridX * tileSize + SPIKE_HITBOX_OFFSET,
+                        gridY * tileSize + SPIKE_HITBOX_OFFSET,
+                        tileSize - 2 * SPIKE_HITBOX_OFFSET,
+                        tileSize - 2 * SPIKE_HITBOX_OFFSET
+                    );
+
+                    // Check if the player's hitbox intersects with the spike hitbox
+                    if (playerHitbox.Intersects(noFloorHitbox))
+                    {
+                        // Handle collision with no floor
+                        gameOver = true;
+                    }
+
+                }
+            }
 			return "nothing"; // No collision
 		}
 

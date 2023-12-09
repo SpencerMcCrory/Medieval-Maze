@@ -111,6 +111,7 @@ namespace FinalProjectGameProgramming.GameStates
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            // TODO: Add a background image
             spriteBatch.Begin();
 
             playButton.Draw(spriteBatch);
