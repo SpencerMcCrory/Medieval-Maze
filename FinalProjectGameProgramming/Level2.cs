@@ -357,15 +357,15 @@ namespace FinalProjectGameProgramming
 
 			if (levelComplete)
 			{
-                string transitionMessage = "Congratulations,you beat the game!\nYour score was " + score.GetScore() + "\nPress ENTER to continue.";
-                IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
-                gameStateHandler.ChangeState(new GameOverState(gameStateHandler, font, transitionMessage, nextState));
+                string transitionMessage = "Congratulations,you beat the game!\nYour score was " + score.GetScore();
+                // IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
+                gameStateHandler.ChangeState(new GameOverState(_graphics, gameStateHandler, _content, _graphicsDevice, font, transitionMessage, score.GetScore()));
             }
 			if (gameOver)
 			{
-                string transitionMessage = "Game Over!\nYour score is " + score.GetScore() + "\nPress ENTER to continue.";
-                IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
-                gameStateHandler.ChangeState(new GameOverState(gameStateHandler, font, transitionMessage, nextState));
+                string transitionMessage = "Game Over!\nYour score is " + score.GetScore();
+                // IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
+                gameStateHandler.ChangeState(new GameOverState(_graphics, gameStateHandler, _content, _graphicsDevice, font, transitionMessage, score.GetScore()));
 
             }
 			spriteBatch.End();

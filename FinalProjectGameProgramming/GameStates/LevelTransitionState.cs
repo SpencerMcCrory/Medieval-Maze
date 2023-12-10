@@ -16,15 +16,16 @@ namespace FinalProjectGameProgramming.GameStates
         private SpriteFont font;
         private string message;
         private IGameState nextState;
+        private GraphicsDeviceManager _graphics;
 
 
-
-        public LevelTransitionState(GameStateHandler gameStateHandler, SpriteFont font, string message, IGameState nextState)
+        public LevelTransitionState(GraphicsDeviceManager graphics, GameStateHandler gameStateHandler, SpriteFont font, string message, IGameState nextState)
         {
             this.gameStateHandler = gameStateHandler;
             this.font = font;
             this.message = message;
             this.nextState = nextState;
+            _graphics = graphics;
         }
 
         public void Enter() { }
@@ -42,7 +43,14 @@ namespace FinalProjectGameProgramming.GameStates
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
-            spriteBatch.DrawString(font, message, new Vector2(100, 100), Color.White);
+            // convert the message into a vector to get the size of the text
+            Vector2 textSize = font.MeasureString(message);
+            // calculate the position of the text to center it on the screen
+            Vector2 textPosition = new Vector2(
+                (_graphics.PreferredBackBufferWidth - textSize.X) / 2,
+                (_graphics.PreferredBackBufferHeight - textSize.Y) / 2
+            );
+            spriteBatch.DrawString(font, message, textPosition, Color.White);
             spriteBatch.End();
         }
     }

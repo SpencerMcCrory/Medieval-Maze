@@ -29,7 +29,7 @@ namespace FinalProjectGameProgramming.Entities
         public Button(Texture2D releasedTexture, Texture2D pressedTexture, GraphicsDevice graphics, SpriteFont newFont, string text)
         {
             releasedButtonTexture = releasedTexture;
-            pressedButtonTexture= pressedTexture;
+            pressedButtonTexture = pressedTexture;
             font = newFont;
             buttonText = text;
             // Set the size of the button
@@ -37,7 +37,7 @@ namespace FinalProjectGameProgramming.Entities
             currentTexture = releasedButtonTexture;
         }
 
-        
+
         public bool isClicked;
 
         public void Update(MouseState mouse)
@@ -70,6 +70,19 @@ namespace FinalProjectGameProgramming.Entities
             position = newPosition;
         }
 
+        public Vector2 GetPosition()
+        {
+            return position;
+        }
+
+        public Vector2 GetSize()
+        {
+            return size;
+        }
+        public void SetSize(Vector2 newSize)
+        {
+            size = newSize;
+        }   
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(currentTexture, rectangle, color);

@@ -23,6 +23,10 @@ namespace FinalProjectGameProgramming.Handlers
             MainMenu nextState = new MainMenu(this, menuFont, graphics, content, graphicsDevice);
             BackgroundImageState backgroundImageState = new BackgroundImageState(content, graphics, nextState, this);
             ChangeState(backgroundImageState);
+
+            // Delay for 2 seconds
+            // System.Threading.Thread.Sleep(2000);
+            ChangeState(mainMenu);
         }
 
         public void ChangeState(IGameState newState)
