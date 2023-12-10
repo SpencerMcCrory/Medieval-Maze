@@ -20,8 +20,9 @@ namespace FinalProjectGameProgramming.Handlers
         {
             // Initialize the MainMenu as the starting state
             SpriteFont menuFont = content.Load<SpriteFont>("galleryFont"); // Load your font
-            MainMenu mainMenu = new MainMenu(this, menuFont, graphics, content, graphicsDevice);
-            ChangeState(mainMenu);
+            MainMenu nextState = new MainMenu(this, menuFont, graphics, content, graphicsDevice);
+            BackgroundImageState backgroundImageState = new BackgroundImageState(content, graphics, nextState, this);
+            ChangeState(backgroundImageState);
         }
 
         public void ChangeState(IGameState newState)
