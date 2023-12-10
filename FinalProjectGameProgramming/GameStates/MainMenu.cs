@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -27,6 +26,7 @@ namespace FinalProjectGameProgramming.GameStates
         GraphicsDevice _graphicsDevice;
         Texture2D buttonReleasedTexture;
         Texture2D buttonPressedTexture;
+        Texture2D backgroundImage;
 
 
         private Button[] buttons;
@@ -51,6 +51,7 @@ namespace FinalProjectGameProgramming.GameStates
 
             Texture2D buttonReleasedTexture = content.Load<Texture2D>("Button_Release_01a2");
             Texture2D buttonPressedTexture = content.Load<Texture2D>("Button_Release_01a1");// Load your button texture
+            backgroundImage = content.Load<Texture2D>("MedievalMaze4");
 
             // Get the center position of the screen for the button
             Button button = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "");
@@ -128,10 +129,10 @@ namespace FinalProjectGameProgramming.GameStates
         {
             // TODO: Add a background image
             spriteBatch.Begin();
+            spriteBatch.Draw(backgroundImage, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
             playButton.Draw(spriteBatch);
             exitButton.Draw(spriteBatch);
             leaderBoardButton.Draw(spriteBatch);
-
             spriteBatch.End();
         }
     }
