@@ -18,6 +18,7 @@ namespace FinalProjectGameProgramming.GameStates
         private IGameState nextState;
 
 
+
         public LevelTransitionState(GameStateHandler gameStateHandler, SpriteFont font, string message, IGameState nextState)
         {
             this.gameStateHandler = gameStateHandler;
