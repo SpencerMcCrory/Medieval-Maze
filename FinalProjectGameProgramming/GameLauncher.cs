@@ -24,7 +24,7 @@ namespace FinalProjectGameProgramming
 
         protected override void Initialize()
         {
-
+            //setting up window specifications
             _graphics.PreferredBackBufferWidth = 1200;
             _graphics.PreferredBackBufferHeight = 800;
             _graphics.ApplyChanges();
