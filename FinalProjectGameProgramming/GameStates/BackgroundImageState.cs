@@ -22,6 +22,7 @@ namespace FinalProjectGameProgramming.GameStates
         private int screenHeight;
         IGameState nextState;
         GameStateHandler gameStateHandler;
+        private double timer;
 
 
 
@@ -33,6 +34,7 @@ namespace FinalProjectGameProgramming.GameStates
             this.screenHeight = graphicsDevice.Viewport.Height;
             this.nextState = nextState;
             this.gameStateHandler = gamestateHandler;
+            this.timer = 0;
 
 
         }
@@ -57,6 +59,15 @@ namespace FinalProjectGameProgramming.GameStates
 
         public void Update(GameTime gameTime)
         {
+            // Increment the timer by the elapsed game time in milliseconds
+            timer += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            // Check if 2 seconds have passed
+            if (timer >= 3000)
+            {
+                timer = 0; // Reset the timer if you need to track this again later
+                gameStateHandler.ChangeState(nextState);
+            }
             if (Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
                 gameStateHandler.ChangeState(nextState);
