@@ -57,9 +57,7 @@ namespace FinalProjectGameProgramming.GameStates
             exitButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Exit");
             exitButton.SetPosition(new Vector2(200, 170)); // Set position for Exit button
 
-            buttons = new Button[] { playButton, exitButton };
-
-            
+            buttons = new Button[] { playButton, exitButton };   
         }
 
         public void Enter()
