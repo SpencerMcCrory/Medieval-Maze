@@ -63,7 +63,7 @@ namespace FinalProjectGameProgramming.GameStates
             backgroundImages[0].Dispose();
             backgroundImages[1].Dispose();
             backgroundImages[2].Dispose();
-            backgroundImages[3].Dispose();
+            //backgroundImages[3].Dispose();
             GC.Collect();
         }
 
