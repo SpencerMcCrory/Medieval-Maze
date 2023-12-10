@@ -15,7 +15,7 @@ namespace FinalProjectGameProgramming.GameStates
 {
     internal class BackgroundImageState : IGameState
     {
-        private Texture2D backgroundImage;
+        private Texture2D[] backgroundImages;
         ContentManager content;
         private GraphicsDevice graphicsDevice;
         private int screenWidth;
@@ -23,8 +23,9 @@ namespace FinalProjectGameProgramming.GameStates
         IGameState nextState;
         GameStateHandler gameStateHandler;
         private double timer;
-
-
+        AnimationHandler animation;
+        private int currentFrame;
+        private double animationTimer;
 
         public BackgroundImageState(ContentManager content, GraphicsDeviceManager graphicsDeviceManager, IGameState nextState, GameStateHandler gamestateHandler)
         {
@@ -42,18 +43,27 @@ namespace FinalProjectGameProgramming.GameStates
         {
             
             spriteBatch.Begin();
-            spriteBatch.Draw(backgroundImage, new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
+            spriteBatch.Draw(animation.Frames[currentFrame], new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
             spriteBatch.End();
         }
 
         public void Enter()
         {
-            backgroundImage = content.Load<Texture2D>("MedievalMaze");
+            backgroundImages = new Texture2D[4];
+            for (int i = 0; i < 4; i++)
+            {
+                backgroundImages[i] = content.Load<Texture2D>($"MedievalMaze{i+1}");
+            }
+            animation = new AnimationHandler(backgroundImages, 0.08);
+
         }
 
         public void Exit()
         {
-            backgroundImage.Dispose();
+            backgroundImages[0].Dispose();
+            backgroundImages[1].Dispose();
+            backgroundImages[2].Dispose();
+            backgroundImages[3].Dispose();
             GC.Collect();
         }
 
@@ -63,7 +73,7 @@ namespace FinalProjectGameProgramming.GameStates
             timer += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Check if 2 seconds have passed
-            if (timer >= 3000)
+            if (timer >= 5000)
             {
                 timer = 0; // Reset the timer if you need to track this again later
                 gameStateHandler.ChangeState(nextState);
@@ -71,6 +81,13 @@ namespace FinalProjectGameProgramming.GameStates
             if (Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
                 gameStateHandler.ChangeState(nextState);
+            }
+
+            animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
+            if (animationTimer > animation.TimePerFrame)
+            {
+                currentFrame = (currentFrame + 1) % 4;
+                animationTimer -= animation.TimePerFrame;
             }
         }
     }
