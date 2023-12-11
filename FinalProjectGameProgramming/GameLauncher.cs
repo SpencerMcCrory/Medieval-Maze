@@ -1,5 +1,6 @@
 ﻿using FinalProjectGameProgramming.Handlers;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
 using System;
@@ -35,6 +36,8 @@ namespace FinalProjectGameProgramming
         {   
             spriteBatch = new SpriteBatch(GraphicsDevice);
             MusicHandler.LoadContent(Content);
+            SFXHandler.LoadContent(Content);
+            SoundEffect.MasterVolume = 0.2f;
             gameStateHandler = new GameStateHandler(_graphics, Content, GraphicsDevice);
         }
 

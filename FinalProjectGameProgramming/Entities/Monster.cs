@@ -14,6 +14,7 @@ namespace FinalProjectGameProgramming.Entities
         public Vector2 Direction { get; protected set; }
         public Rectangle Hitbox { get; set; }
 
+        public bool IsFacingRight { get; set; } = true;
         protected Monster(Texture2D texture, Vector2 position, float initialSpeed, Vector2 initialDirection)
         {
             Texture = texture;
@@ -65,4 +66,5 @@ namespace FinalProjectGameProgramming.Entities
             spriteBatch.Draw(Texture, Position, Color.White);
         }
     }
+    
 }

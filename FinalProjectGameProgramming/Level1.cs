@@ -7,13 +7,15 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using Microsoft.Xna.Framework.Media;
 using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.IO;
+using System.Linq;
 using System.Reflection.Metadata;
+using System.Runtime.ConstrainedExecution;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
@@ -33,15 +35,14 @@ namespace FinalProjectGameProgramming
 		private int tileSize = 64;
 		private float movementDelta;
 		const int SPIKE_HITBOX_OFFSET = 10;
-		private Texture2D playerTexture;
-		private Texture2D slimeTexture;
 		Player player;
 		Texture2D[] slimeRunFrames;
-		private Texture2D bigZombieTexture;
+		Texture2D[] relicFrames;
 		private Rectangle monsterHitbox;
 		List<Monster> monsters = new List<Monster>();
+        List<Relic> relics = new List<Relic>();
 
-		int timingDelay = 0;
+        int timingDelay = 0;
 
 		private Texture2D[] playerAnimationFrames;
 		const int playerFrameCount = 4;
@@ -151,17 +152,20 @@ namespace FinalProjectGameProgramming
 			{
 				bigZombieRunFrames[i] = _content.Load<Texture2D>($"big_zombie_run_anim_f{i}");
 			}
+            Texture2D[] relicFrames = new Texture2D[3];
+            for (int i = 0; i < 3; i++)
+            {
+               relicFrames[i] = _content.Load<Texture2D>($"chest_full_open_anim_f{i}");
+            }
 
 
-			// Load textures
-			backgroundTexture = _content.Load<Texture2D>("Background");
+            // Load textures
+            backgroundTexture = _content.Load<Texture2D>("Background");
 			wallsTexture = _content.Load<Texture2D>("Walls_BackGround");
 			door = _content.Load<Texture2D>("Door_Closed");
 			button = _content.Load<Texture2D>("Button_not_pressed");
-			playerTexture = _content.Load<Texture2D>("knight_f_run_anim_f0");
+			
 
-			slimeTexture = _content.Load<Texture2D>("swampy_anim_f0");
-			bigZombieTexture = _content.Load<Texture2D>("big_zombie_run_anim_f0");
 
 			float bigZombieSpeed = 32f; // Slower speed for BigZombie
 			Vector2 bigZombieDirection = new Vector2(1, 0); // Initial direction for BigZombie
@@ -187,8 +191,18 @@ namespace FinalProjectGameProgramming
 			pixel = new Texture2D(_graphicsDevice, 1, 1);
 			pixel.SetData(new[] { Color.White });
 
-			buttonClickSE = _content.Load<SoundEffect>("futuristic_button_click");
+            foreach (int[] spawnPoint in currentLevel.RelicSpawnPoints)
+            {
+
+                    Vector2 position = new Vector2(spawnPoint[0] * tileSize + 5, spawnPoint[1] * tileSize);
+                    relics.Add(new Relic(position, relicFrames, 0.08));
+
+            }
+
+            buttonClickSE = _content.Load<SoundEffect>("futuristic_button_click");
 			font = _content.Load<SpriteFont>("galleryFont");
+
+
 
 		}
 
@@ -243,13 +257,25 @@ namespace FinalProjectGameProgramming
 
 			KeyboardState state = Keyboard.GetState();
 			if (state.IsKeyDown(Keys.Up) || state.IsKeyDown(Keys.W))
-				direction.Y -= 1;
+			{
+                direction.Y -= 1;
+            }
 			if (state.IsKeyDown(Keys.Down) || state.IsKeyDown(Keys.S))
-				direction.Y += 1;
+			{
+                direction.Y += 1;
+            }
 			if (state.IsKeyDown(Keys.Left) || state.IsKeyDown(Keys.A))
-				direction.X -= 1;
-			if (state.IsKeyDown(Keys.Right) || state.IsKeyDown(Keys.D))
-				direction.X += 1;
+			{
+                direction.X -= 1;
+                player.IsFacingRight = false;//change direction of player texture
+            }
+				
+            if (state.IsKeyDown(Keys.Right) || state.IsKeyDown(Keys.D))
+			{
+                direction.X += 1;
+                player.IsFacingRight = true;//change direction of player texture
+            }
+				
 
 			if (direction != Vector2.Zero)
 			{
@@ -259,7 +285,8 @@ namespace FinalProjectGameProgramming
 			{
 				currentAnimationKey = "playerIdle";
 			}
-			AnimationHandler currentAnimation = animations[currentAnimationKey];
+            
+            AnimationHandler currentAnimation = animations[currentAnimationKey];
 			animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
 			if (animationTimer > currentAnimation.TimePerFrame)
 			{
@@ -277,13 +304,19 @@ namespace FinalProjectGameProgramming
 				player.Position = newPlayerPosition;
 			}
 
-			//get the center of the window
-			Microsoft.Xna.Framework.Vector2 tempVec = player.Position - new Microsoft.Xna.Framework.Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
+            foreach (Relic relic in relics)
+            {
+                relic.Update(gameTime);
+            }
+
+            //get the center of the window
+            Microsoft.Xna.Framework.Vector2 tempVec = player.Position - new Microsoft.Xna.Framework.Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
 
 			//update the camera position
 			camera.Position = new System.Numerics.Vector2(tempVec.X, tempVec.Y);
 
 			elapsedTime += gameTime.ElapsedGameTime;
+
 		}
 
 		public override void DrawLevel(SpriteBatch spriteBatch)
@@ -300,11 +333,22 @@ namespace FinalProjectGameProgramming
 			spriteBatch.Draw(door, Vector2.Zero, Color.White);
 			spriteBatch.Draw(button, Vector2.Zero, Color.White);
 
+            SpriteEffects spriteEffects = player.IsFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            //draw player animation current frame
+            AnimationHandler currentAnimation = animations[currentAnimationKey];
+			//to use sprite effects you need to include other perameters
+            spriteBatch.Draw(
+								texture: currentAnimation.Frames[currentFrame], // The texture to draw
+								position: player.Position, 
+								sourceRectangle: null, // The area of the texture to draw (use null for the whole texture)
+								color: Color.White, 
+								rotation: 0f, // The rotation of the texture 
+								origin: Vector2.Zero, // The origin of the texture 
+								scale: 1f, // The scale factor 
+								effects: spriteEffects, // The SpriteEffects value (SpriteEffects.FlipHorizontally)
+								layerDepth: 0f); // The depth of the layer 
 
-			AnimationHandler currentAnimation = animations[currentAnimationKey];
-			spriteBatch.Draw(currentAnimation.Frames[currentFrame], player.Position, Color.White);
-
-			foreach (Monster monster in monsters)
+            foreach (Monster monster in monsters)
 			{
 				//debugging hitbox
 				if (monster.Name == "Big Zombie")
@@ -329,6 +373,11 @@ namespace FinalProjectGameProgramming
 				// Draw the hitbox as a red rectangle
 				spriteBatch.Draw(pixel, monsterHitbox, Color.Red * 0.5f);
 				monster.Draw(spriteBatch);
+            }
+
+			foreach (Relic relic in relics)
+			{
+				relic.Draw(spriteBatch);
 			}
 
 
@@ -392,8 +441,49 @@ namespace FinalProjectGameProgramming
 
 
 				if (currentLevel.Grid[gridY, gridX] == 1)
-					return "wall"; // Collision detected
-				if (currentLevel.Grid[gridY, gridX] == 3)
+				{
+                    return "wall"; // Collision detected
+                }
+				else if (currentLevel.Grid[gridY,gridX] == 2)
+				{
+                    Rectangle relicHitbox = new Rectangle(
+                        gridX * tileSize + SPIKE_HITBOX_OFFSET,
+                        gridY * tileSize + SPIKE_HITBOX_OFFSET,
+                        tileSize - 2 * SPIKE_HITBOX_OFFSET,
+                        tileSize - 2 * SPIKE_HITBOX_OFFSET
+                    );
+
+                    // Check if the player's hitbox intersects with the relic hitbox
+                    if (playerHitbox.Intersects(relicHitbox))
+                    {
+						Relic removedRelic = null;
+						foreach(Relic relic in relics)
+						{
+							//detecting which relic was hit
+							Vector2 relicPosition = new Vector2(gridX * tileSize + 5, gridY * tileSize);
+							if (relicPosition == relic.Position)
+							{
+								//making sure relic was not already opened
+								if (relic.IsDeleted == false)
+								{
+                                    relic.IsDeleted = true;
+									int relicScore = relic.Score;
+									score.AddScore(relicScore);
+									removedRelic = relic;
+									SFXHandler.RelicOpenSound.Play();
+                                }
+								
+							}
+						}
+						if(removedRelic != null)
+						{
+							//remove relic from list
+                            relics.Remove(removedRelic);
+                        }
+						return "relic";
+                    }
+                }
+				else if (currentLevel.Grid[gridY, gridX] == 3)
 				{
 					if (!buttonPressed)
 					{
@@ -422,11 +512,11 @@ namespace FinalProjectGameProgramming
 					UnloadContent();
 					return "button";
 				}
-				if (currentLevel.Grid[gridY, gridX] == 6)
+				else if (currentLevel.Grid[gridY, gridX] == 6)
 				{
 					levelComplete = true;
 				}
-				if (currentLevel.Grid[gridY, gridX] == 9)
+				else if (currentLevel.Grid[gridY, gridX] == 9)
 				{
 					Rectangle spikeHitbox = new Rectangle(
 						gridX * tileSize + SPIKE_HITBOX_OFFSET,

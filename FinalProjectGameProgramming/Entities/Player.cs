@@ -21,6 +21,7 @@ namespace FinalProjectGameProgramming.Entities
             position = new Vector2(0, 0);
 
         }
+        public bool IsFacingRight { get; set; } = true;
 
         public float speed { get; private set; }
 

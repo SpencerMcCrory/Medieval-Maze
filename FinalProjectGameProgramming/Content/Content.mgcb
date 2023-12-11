@@ -73,12 +73,6 @@
 /processorParam:TextureFormat=Color
 /build:big_zombie_run_anim_f3.png
 
-#begin button_click.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:button_click.wav
-
 #begin Button_not_pressed.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -126,6 +120,42 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Button_Release_01a2.png
+
+#begin chest_full_open_anim_f0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:chest_full_open_anim_f0.png
+
+#begin chest_full_open_anim_f1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:chest_full_open_anim_f1.png
+
+#begin chest_full_open_anim_f2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:chest_full_open_anim_f2.png
 
 #begin compositeBGLevel2.png
 /importer:TextureImporter
@@ -308,6 +338,18 @@
 /processorParam:TextureFormat=Color
 /build:L2_Button_pressed.png
 
+#begin LeaderBoardBG.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:LeaderBoardBG.png
+
 #begin Level2_Door_Closed.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -391,6 +433,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:MedievalMaze4.png
+
+#begin relic_open_sfx.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:relic_open_sfx.wav
 
 #begin Spikes_green_button_pressed.png
 /importer:TextureImporter

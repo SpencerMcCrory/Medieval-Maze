@@ -60,14 +60,15 @@ internal class BigZombie : Monster
 
     protected override void CheckForCollisionAndChangeDirection()
     {
-        Rectangle bounds = GetBounds();
+        Rectangle bounds = GetHitBox();
         if (collisionHandler.CheckCollisionWithEnvironment(bounds))
         {
             Direction = -Direction; // Reverse direction
+            IsFacingRight = Direction == new Vector2(1,0)? true: false;
         }
     }
 
-    private Rectangle GetBounds()
+    private Rectangle GetHitBox()
     {
         return new Rectangle(
             (int)Position.X + (HitboxSideOffset + hitboxInsetX),
@@ -78,7 +79,19 @@ internal class BigZombie : Monster
     
     public override void Draw(SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(runAnimation.CurrentFrame, Position, Color.White);
+        SpriteEffects effects = IsFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+
+        //Draw method only has a constructor that takes this many arguments if you want to use sprite effects
+        spriteBatch.Draw(
+                        texture: runAnimation.CurrentFrame, // The texture to draw
+                        position: Position, 
+                        sourceRectangle: null, // Area of the texture to draw
+                        color: Color.White, // No colour tint
+                        rotation: 0f, // No rotation
+                        origin: Vector2.Zero, // The origin of the texture (top left corner)
+                        scale: 1f, // The scale factor 
+                        effects: effects, // Flips the image
+                        layerDepth: 0f);
     }
 
     private void DrawLine(SpriteBatch spriteBatch, Texture2D pixel, Vector2 start, Vector2 end, Color color)
