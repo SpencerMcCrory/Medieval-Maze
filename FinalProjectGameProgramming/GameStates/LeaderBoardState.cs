@@ -18,6 +18,9 @@ namespace FinalProjectGameProgramming.GameStates
         private ContentManager _content;
         private GraphicsDevice _graphicsDevice;
         private MouseState mState;
+        private Texture2D leaderBoardBG;
+        private int screenWidth;
+        private int screenHeight;
         // A dictionary of the top 5 scores
         // Using a static list to store the scores in memory
         private static List<Dictionary<string, float>> leaderBoardScores = new List<Dictionary<string, float>>(){
@@ -51,6 +54,8 @@ namespace FinalProjectGameProgramming.GameStates
             _font = font;
             _graphicsDevice = graphicsDevice;
             _userScore = userScore;
+            screenWidth = graphicsDevice.Viewport.Width;
+            screenHeight = graphicsDevice.Viewport.Height;
             AddUserScoreToLeaderBoard();
 
             // Load the button textures
@@ -75,7 +80,9 @@ namespace FinalProjectGameProgramming.GameStates
             }
         }
 
-        public void Enter() { }
+        public void Enter() {
+            leaderBoardBG = _content.Load<Texture2D>("LeaderBoardBG");
+        }
 
         public void Exit() { }
 
@@ -93,21 +100,11 @@ namespace FinalProjectGameProgramming.GameStates
         {
             // TODO: Add a background image
             spriteBatch.Begin();
+            //draw bg image
+            spriteBatch.Draw(leaderBoardBG, new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
+
             // Draw the close button
             closedButton.Draw(spriteBatch);
-
-            // HEADING
-            string heading = "LEADERBOARD";
-            // convert the message into a vector to get the size of the text
-            Vector2 headingSize = _font.MeasureString(heading);
-            // calculate the position of the text to center it on the screen
-            Vector2 headingPosition = new Vector2(
-                (_graphics.PreferredBackBufferWidth - headingSize.X) / 2,
-                50
-            );
-            // Draw the heading
-            spriteBatch.DrawString(_font, heading, headingPosition, Color.Black);
-            // ./HEADING
 
             // Loop through the top 5 scores
             for (int i = 0; i < leaderBoardScores.Count; i++)

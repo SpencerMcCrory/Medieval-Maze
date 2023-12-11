@@ -30,12 +30,10 @@ namespace FinalProjectGameProgramming
 		private int tileSize = 64;
 		private float movementDelta;
 		const int SPIKE_HITBOX_OFFSET = 10;
-		private Texture2D playerTexture;
-		private Texture2D slimeTexture;
 		Player player;
 		Texture2D[] slimeRunFrames;
-		private Texture2D bigZombieTexture;
 		Rectangle monsterHitbox;
+        List<Relic> relics = new List<Relic>();
 
         List<Monster> monsters = new List<Monster>();
 
@@ -145,19 +143,22 @@ namespace FinalProjectGameProgramming
 			{
 				bigZombieRunFrames[i] = _content.Load<Texture2D>($"big_zombie_run_anim_f{i}");
 			}
+			//Load relic open animation frames
+            Texture2D[] relicFrames = new Texture2D[3];
+            for (int i = 0; i < 3; i++)
+            {
+                relicFrames[i] = _content.Load<Texture2D>($"chest_full_open_anim_f{i}");
+            }
 
 
-			// Load textures
-			backgroundTexture = _content.Load<Texture2D>("compositeBGLevel2");
+            // Load textures
+            backgroundTexture = _content.Load<Texture2D>("compositeBGLevel2");
 
 			door = _content.Load<Texture2D>("Level2_Door_Closed");
 			button = _content.Load<Texture2D>("L2_Button_not_pressed");
-			playerTexture = _content.Load<Texture2D>("knight_f_run_anim_f0");
 			greenSpikes = _content.Load<Texture2D>("Spikes_green");
 			purpleSpikes = _content.Load<Texture2D>("Spikes_purple");
 
-			slimeTexture = _content.Load<Texture2D>("swampy_anim_f0");
-			bigZombieTexture = _content.Load<Texture2D>("big_zombie_run_anim_f0");
 
 			float bigZombieSpeed = 32f; // Slower speed for BigZombie
 			Vector2 bigZombieDirection = new Vector2(0, 1); // Initial direction for BigZombie
@@ -182,6 +183,15 @@ namespace FinalProjectGameProgramming
 			//used for drawing hitboxes
             pixel = new Texture2D(_graphicsDevice, 1, 1);
             pixel.SetData(new[] { Color.White });
+
+            foreach (int[] spawnPoint in currentLevel.RelicSpawnPoints)
+            {
+
+                Vector2 position = new Vector2(spawnPoint[0] * tileSize + 5, spawnPoint[1] * tileSize);
+                relics.Add(new Relic(position, relicFrames, 0.08));
+
+            }
+
             buttonClickSE = _content.Load<SoundEffect>("futuristic_button_click");
 			font = _content.Load<SpriteFont>("galleryFont");
 
@@ -241,17 +251,28 @@ namespace FinalProjectGameProgramming
 			// Movement input
 			Vector2 direction = Vector2.Zero;
 
-			KeyboardState state = Keyboard.GetState();
-			if (state.IsKeyDown(Keys.Up) || state.IsKeyDown(Keys.W))
-				direction.Y -= 1;
-			if (state.IsKeyDown(Keys.Down) || state.IsKeyDown(Keys.S))
-				direction.Y += 1;
-			if (state.IsKeyDown(Keys.Left) || state.IsKeyDown(Keys.A))
-				direction.X -= 1;
-			if (state.IsKeyDown(Keys.Right) || state.IsKeyDown(Keys.D))
-				direction.X += 1;
+            KeyboardState state = Keyboard.GetState();
+            if (state.IsKeyDown(Keys.Up) || state.IsKeyDown(Keys.W))
+            {
+                direction.Y -= 1;
+            }
+            if (state.IsKeyDown(Keys.Down) || state.IsKeyDown(Keys.S))
+            {
+                direction.Y += 1;
+            }
+            if (state.IsKeyDown(Keys.Left) || state.IsKeyDown(Keys.A))
+            {
+                direction.X -= 1;
+                player.IsFacingRight = false;//change direction of player texture
+            }
 
-			if (direction != Vector2.Zero)
+            if (state.IsKeyDown(Keys.Right) || state.IsKeyDown(Keys.D))
+            {
+                direction.X += 1;
+                player.IsFacingRight = true;//change direction of player texture
+            }
+
+            if (direction != Vector2.Zero)
 			{
 				currentAnimationKey = "playerRun";
 			}
@@ -277,8 +298,14 @@ namespace FinalProjectGameProgramming
 				player.Position = newPlayerPosition;
 			}
 
-			//get the center of the window
-			Microsoft.Xna.Framework.Vector2 tempVec = player.Position - new Microsoft.Xna.Framework.Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
+			//update relic
+            foreach (Relic relic in relics)
+            {
+                relic.Update(gameTime);
+            }
+
+            //get the center of the window
+            Microsoft.Xna.Framework.Vector2 tempVec = player.Position - new Microsoft.Xna.Framework.Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
 
 			//update the camera position
 			camera.Position = new System.Numerics.Vector2(tempVec.X, tempVec.Y);
@@ -331,6 +358,11 @@ namespace FinalProjectGameProgramming
                 spriteBatch.Draw(pixel, monsterHitbox, Color.Red * 0.5f);
                 monster.Draw(spriteBatch);
 
+            }
+
+            foreach (Relic relic in relics)
+            {
+                relic.Draw(spriteBatch);
             }
 
             //for Debugging hitbox Draw the semi - transparent hitbox
@@ -392,8 +424,49 @@ namespace FinalProjectGameProgramming
 
 
 				if (currentLevel.Grid[gridY, gridX] == 1)
-					return "wall"; // Collision detected
-				if (currentLevel.Grid[gridY, gridX] == 3)
+				{
+                    return "wall"; // Collision detected
+                }
+                else if (currentLevel.Grid[gridY, gridX] == 2)
+                {
+                    Rectangle relicHitbox = new Rectangle(
+                        gridX * tileSize + SPIKE_HITBOX_OFFSET,
+                        gridY * tileSize + SPIKE_HITBOX_OFFSET,
+                        tileSize - 2 * SPIKE_HITBOX_OFFSET,
+                        tileSize - 2 * SPIKE_HITBOX_OFFSET
+                    );
+
+                    // Check if the player's hitbox intersects with the relic hitbox
+                    if (playerHitbox.Intersects(relicHitbox))
+                    {
+                        Relic removedRelic = null;
+                        foreach (Relic relic in relics)
+                        {
+                            //detecting which relic was hit
+                            Vector2 relicPosition = new Vector2(gridX * tileSize + 5, gridY * tileSize);
+                            if (relicPosition == relic.Position)
+                            {
+                                //making sure relic was not already opened
+                                if (relic.IsDeleted == false)
+                                {
+                                    relic.IsDeleted = true;
+                                    int relicScore = relic.Score;
+                                    score.AddScore(relicScore);
+                                    removedRelic = relic;
+                                    SFXHandler.RelicOpenSound.Play();
+                                }
+
+                            }
+                        }
+                        if (removedRelic != null)
+                        {
+                            //remove relic from list
+                            relics.Remove(removedRelic);
+                        }
+                        return "relic";
+                    }
+                }
+                if (currentLevel.Grid[gridY, gridX] == 3)
 				{
 					if (!buttonPressed)
 					{

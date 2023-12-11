@@ -16,7 +16,7 @@ namespace FinalProjectGameProgramming.Handlers
         //could use these properties or something like them in the future to spawn monsters/relics
         public List<int[]> MonsterSpawnPoints { get; private set; }
 
-        public ArrayList RelicSpawnPoints { get; private set; }
+        public List<int[]> RelicSpawnPoints { get; private set; }
 
         public List<int[]> SpikeLocations { get; private set; }
 
@@ -49,7 +49,7 @@ namespace FinalProjectGameProgramming.Handlers
 
             Grid = new int[rows.Count, rows[0].Length]; 
             MonsterSpawnPoints = new List<int[]>();
-            RelicSpawnPoints = new ArrayList();
+            RelicSpawnPoints = new List<int[]>();
             SpikeLocations = new List<int[]>();
 
             for (int i = 0; i < rows.Count; i++)

@@ -55,6 +55,7 @@ namespace FinalProjectGameProgramming.Entities
             {
                 // Reverse direction
                 Direction = -Direction;
+                IsFacingRight = Direction == new Vector2(1, 0) ? true : false;
                 // When change direction randomly. there is a chance that the monster will get stuck in a wall because of the HitboxSideOffset
                 // Direction = ChangeDirectionRandomly();
             }
@@ -70,7 +71,19 @@ namespace FinalProjectGameProgramming.Entities
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(runAnimation.CurrentFrame, Position, Color.White);
+            SpriteEffects effects = IsFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+
+            //Draw method only has a constructor that takes this many arguments if you want to use sprite effects
+            spriteBatch.Draw(
+                            texture: runAnimation.CurrentFrame, // The texture to draw
+                            position: Position,
+                            sourceRectangle: null, // Area of the texture to draw
+                            color: Color.White, // No colour tint
+                            rotation: 0f, // No rotation
+                            origin: Vector2.Zero, // The origin of the texture (top left corner)
+                            scale: 1f, // The scale factor 
+                            effects: effects, // Flips the image
+                            layerDepth: 0f);
         }
     }
 }
