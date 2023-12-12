@@ -107,6 +107,10 @@ namespace FinalProjectGameProgramming.GameStates
             closedButton.Draw(spriteBatch);
 
             // Loop through the top 5 scores
+            int nameStartingPosition = 300;
+            int scoreStartingPosition = _graphics.PreferredBackBufferWidth - 380;
+            int yStartingPosition = 200;
+            int yIncrement = 50;
             for (int i = 0; i < leaderBoardScores.Count; i++)
             {
                 // Get the current score
@@ -116,8 +120,8 @@ namespace FinalProjectGameProgramming.GameStates
                 // Get the score of the player
                 string playerScore = score.Values.First().ToString();
                 // Calculate positions
-                Vector2 namePosition = new Vector2(300, 200 + (i * 50));
-                Vector2 scorePosition = new Vector2(graphicsDeviceManager.PreferredBackBufferWidth - 300, 200 + (i * 50));
+                Vector2 namePosition = new Vector2(nameStartingPosition, yStartingPosition + (i * yIncrement));
+                Vector2 scorePosition = new Vector2(scoreStartingPosition, yStartingPosition + (i * yIncrement));
 
                 // Draw the name and score
                 spriteBatch.DrawString(_font, name, namePosition, Color.White);

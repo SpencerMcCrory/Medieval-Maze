@@ -18,7 +18,7 @@ namespace FinalProjectGameProgramming.GameStates
     internal class MainMenu : IGameState
     {
         private SpriteFont menuFont;
-        private string[] menuItems = { "Start Game", "Leaderboard", "Exit" };
+        private string[] menuItems = { "Start Game", "Leaderboard", "Help", "About", "Exit" };
         private int selectedIndex = 0;
         private GameStateHandler gameStateHandler;
         GraphicsDeviceManager graphicsDeviceManager;
@@ -65,13 +65,22 @@ namespace FinalProjectGameProgramming.GameStates
             loadSaveButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Load Game");
             loadSaveButton.SetPosition(new Vector2(centerX, playButton.GetPosition().Y + buttonGap)); // Set position for Leaderboard button
             // Create the leaderboard button
-            leaderBoardButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Leaderboard");
-            leaderBoardButton.SetPosition(new Vector2(centerX, loadSaveButton.GetPosition().Y + buttonGap)); // Set position for Leaderboard button
+            leaderBoardButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Leaderboard");
+            leaderBoardButton.SetPosition(new Vector2(centerX, playButton.GetPosition().Y + buttonGap)); // Set position for Leaderboard button
+
+            // create the help button
+            helpButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Help");
+            helpButton.SetPosition(new Vector2(centerX, leaderBoardButton.GetPosition().Y + buttonGap)); // Set position for Help button
+
+            // Create the about button
+            aboutButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "About");
+            aboutButton.SetPosition(new Vector2(centerX, helpButton.GetPosition().Y + buttonGap)); // Set position for About button
+
             // Create the exit button
-            exitButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Exit");
-            exitButton.SetPosition(new Vector2(centerX, leaderBoardButton.GetPosition().Y + buttonGap)); // Set position for Exit button
+            exitButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Exit");
+            exitButton.SetPosition(new Vector2(centerX, aboutButton.GetPosition().Y + buttonGap)); // Set position for Exit button
             // Add the buttons to the array
-            buttons = new CustomButton[] { playButton, loadSaveButton, leaderBoardButton, exitButton };
+            buttons = new Button[] { playButton, loadSaveButton, leaderBoardButton, helpButton, aboutButton, exitButton };
         }
 
         public void Enter()
@@ -148,6 +157,18 @@ namespace FinalProjectGameProgramming.GameStates
 
             }
 
+            // Help button action
+            if (helpButton.isClicked)
+            {
+                gameStateHandler.ChangeState(new HelpState(_graphics, _content, gameStateHandler, _graphicsDevice, menuFont));
+            }
+
+            // About button action
+            if (aboutButton.isClicked)
+            {
+                gameStateHandler.ChangeState(new AboutState(_graphics, _content, gameStateHandler, _graphicsDevice, menuFont));
+            }
+
             // Exit button action
             if (exitButton.isClicked)
             {
@@ -163,8 +184,14 @@ namespace FinalProjectGameProgramming.GameStates
             spriteBatch.Draw(backgroundImage, new Rectangle(0, 0, graphicsDeviceManager.PreferredBackBufferWidth, graphicsDeviceManager.PreferredBackBufferHeight), Color.White);
             playButton.Draw(spriteBatch);
             loadSaveButton.Draw(spriteBatch);
-            exitButton.Draw(spriteBatch);
+            // Draw leaderboard button
             leaderBoardButton.Draw(spriteBatch);
+            // Draw help button
+            helpButton.Draw(spriteBatch);
+            // Draw about button
+            aboutButton.Draw(spriteBatch);
+            // Draw exit button
+            exitButton.Draw(spriteBatch);
             spriteBatch.End();
         }
     }
