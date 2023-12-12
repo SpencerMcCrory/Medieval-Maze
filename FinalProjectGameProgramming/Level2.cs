@@ -431,7 +431,7 @@ namespace FinalProjectGameProgramming
 				}
 
 				// Draw the hitbox as a red rectangle
-				spriteBatch.Draw(pixel, monsterHitbox, Color.Red * 0.5f);
+				// spriteBatch.Draw(pixel, monsterHitbox, Color.Red * 0.5f);
 				monster.Draw(spriteBatch);
 
 			}
@@ -450,10 +450,10 @@ namespace FinalProjectGameProgramming
             }
 
             //for Debugging hitbox Draw the semi - transparent hitbox
-            Color hitboxColorEnvironment = new Color(Color.Red, 0.5f); // Semi-transparent red
+            /* Color hitboxColorEnvironment = new Color(Color.Red, 0.5f); // Semi-transparent red
 			spriteBatch.Draw(pixel, player.EnvironmentHitbox, hitboxColorEnvironment);
 			Color hitboxColorMonster = new Color(Color.Red, 0.5f); // Semi-transparent red
-			spriteBatch.Draw(pixel, player.MonsterHitbox, hitboxColorMonster);
+			spriteBatch.Draw(pixel, player.MonsterHitbox, hitboxColorMonster); */
 
 			spriteBatch.End();
 
