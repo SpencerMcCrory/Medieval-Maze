@@ -10,18 +10,22 @@ namespace FinalProjectGameProgramming.Handlers
 {
     public class SaveHandler
     {
-        private int score {  get; set; }
+        private int score { get; set; }
         private int level { get; set; }
         public SaveHandler() { }
         public SaveHandler(int score, int level)
         {
-           this.score = score;
-           this.level = level;
+            this.score = score;
+            this.level = level;
             SaveFile();
         }
+        // Get Default Folder Path from Settings: Project --> Properties --> Settings
+        static string defaultFolderPath = Properties.Settings.Default.FolderPath;
+        static string directoryName = "Medieval Maze"; // Name of the directory to be created
+        static string saveFileName = "savegame.txt"; // Name of the save file
+        string directoryPath = Path.Combine(defaultFolderPath, directoryName); // Combine the default folder path with the directory name
         public void SaveFile()
         {
-            Console.WriteLine("Game saved successfully.");
             try
             {
                 //// Define a relative path for the save file
@@ -48,12 +52,12 @@ namespace FinalProjectGameProgramming.Handlers
                 ////File.WriteAllText(filePath, $"Level: {level}, Score: {score}");
                 //Console.WriteLine("Game saved successfully.");
 
-                if (!Directory.Exists("C:\\temp"))
+                if (!Directory.Exists(directoryPath))
                 {
-                    Directory.CreateDirectory("C:\\temp");
+                    Directory.CreateDirectory(directoryPath);
                 }
-                string filePath = @"C:\temp\savegame.txt"; // Ensure C:\temp exists
-               
+                string filePath = Path.Combine(directoryPath, saveFileName); // Ensure C:\temp exists
+
                 File.WriteAllText(filePath, $"{level},{score}");
                 Console.WriteLine("Game saved successfully to " + filePath);
             }
@@ -67,7 +71,9 @@ namespace FinalProjectGameProgramming.Handlers
 
         public string[] LoadFile()
         {
-            string filePath = @"C:\temp\savegame.txt"; // The path to your save file
+            string filePath = Path.Combine(directoryPath, saveFileName); // Ensure C:\temp exists
+            Console.WriteLine(filePath);
+            // string filePath = @"C:\temp\savegame.txt"; // The path to your save file
 
             try
             {
@@ -103,7 +109,9 @@ namespace FinalProjectGameProgramming.Handlers
 
         public void DeleteSave()
         {
-            string filePath = @"C:\temp\savegame.txt"; // The path to your save file
+            // The path to your save file
+            string filePath = Path.Combine(directoryPath, saveFileName);
+            // string filePath = @"C:\temp\savegame.txt"; 
 
             try
             {

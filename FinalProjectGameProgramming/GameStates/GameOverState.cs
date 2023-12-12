@@ -56,10 +56,6 @@ namespace FinalProjectGameProgramming.GameStates
 
         public void Update(GameTime gameTime)
         {
-            // if (Keyboard.GetState().IsKeyDown(Keys.Enter))
-            // {
-            //     gameStateHandler.ChangeState(nextState);
-            // }
             currentKeyboardState = Keyboard.GetState();
 
             // Process input

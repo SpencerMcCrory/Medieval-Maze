@@ -464,7 +464,7 @@ namespace FinalProjectGameProgramming
 
 
 			// Draw the score
-			spriteBatch.DrawString(font, $"Score: {score.GetScore()}", new Vector2(10, 30), Color.White);
+			spriteBatch.DrawString(font, $"Score: {score.GetScore()}", new Vector2(10, 50), Color.White);
 			spriteBatch.End();
 
 
