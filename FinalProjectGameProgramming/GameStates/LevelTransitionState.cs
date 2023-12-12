@@ -84,7 +84,9 @@ namespace FinalProjectGameProgramming.GameStates
            
         }
 
-        public void Exit() { }
+        public void Exit() {
+            GC.Collect();
+        }
 
         public void Update(GameTime gameTime)
         {

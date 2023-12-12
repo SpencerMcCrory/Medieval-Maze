@@ -12,11 +12,13 @@ namespace FinalProjectGameProgramming.Handlers
     {
         public static Song MainMenuMusic { get; private set; }
         public static Song Level1Music { get; private set; }
+        public static Song Level2Music { get; private set; }
 
         public static void LoadContent(ContentManager content)
         {
             MainMenuMusic = content.Load<Song>("KevinMacLeod-8bit Dungeon Boss-Level1Music");
             Level1Music = content.Load<Song>("Joshua McLean - Mountain Trials-MainMenu");
+            Level2Music = content.Load<Song>("Density-Time-MAZE");
             
         }
     }

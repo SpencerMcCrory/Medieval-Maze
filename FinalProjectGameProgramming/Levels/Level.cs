@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace FinalProjectGameProgramming.Levels
 {
+    /*abstract class for building a level*/
     public abstract class Level
     {
         public abstract void Initialize();

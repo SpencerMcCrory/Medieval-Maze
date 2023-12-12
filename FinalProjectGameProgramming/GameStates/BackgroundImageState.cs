@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace FinalProjectGameProgramming.GameStates
 {
+/*Initial load screen that is shown on launch*/
     internal class BackgroundImageState : IGameState
     {
         private Texture2D[] backgroundImages;

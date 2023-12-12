@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace FinalProjectGameProgramming.Entities
 {
+    //custom button builder since we're not using windows form
     public class CustomButton
     {
         Texture2D releasedButtonTexture;

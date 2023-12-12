@@ -65,7 +65,7 @@ namespace FinalProjectGameProgramming.GameStates
         public void Enter()
         {
             // Load textures
-            aboutBG = content.Load<Texture2D>("LeaderBoardBG");
+            aboutBG = content.Load<Texture2D>("HelpBG");
             knight = content.Load<Texture2D>("knight_f_idle_anim_f1");
             bigZombie = content.Load<Texture2D>("big_zombie_run_anim_f0");
             slime = content.Load<Texture2D>("swampy_anim_f0");
@@ -81,7 +81,9 @@ namespace FinalProjectGameProgramming.GameStates
             openedDoor = content.Load<Texture2D>("opened_door");
         }
 
-        public void Exit() { }
+        public void Exit() {
+            GC.Collect();
+        }
 
         public void Update(GameTime gameTime)
         {
@@ -98,13 +100,13 @@ namespace FinalProjectGameProgramming.GameStates
             // TODO: Add a background image
             spriteBatch.Begin();
             //draw bg image
-            // spriteBatch.Draw(aboutBG, new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
+            spriteBatch.Draw(aboutBG, new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
             // Get center position of X for the title
             int oddInstructionStart = 220;
             int evenInstructionStart = screenWidth - oddInstructionStart;
-            int imagesYGap = 60;
+            int imagesYGap = 80;
             int gapBetweenInstructions = 200;
-            Vector2 centerPosition = new Vector2(screenWidth / 2, 200);
+            Vector2 centerPosition = new Vector2(screenWidth / 2, 180);
 
             // Draw general information
             // string title = $"How to play game?";
@@ -130,12 +132,12 @@ namespace FinalProjectGameProgramming.GameStates
             // Instruction 2: Images
             spriteBatch.Draw(spike, new Vector2(instruction2Position.X, instruction2Position.Y + imagesYGap), Color.White);
             spriteBatch.Draw(slime, new Vector2(instruction2Position.X + 100, instruction2Position.Y + imagesYGap), Color.White);
-            spriteBatch.Draw(bigZombie, new Vector2(instruction2Position.X + 170, instruction2Position.Y + 20), Color.White);
+            spriteBatch.Draw(bigZombie, new Vector2(instruction2Position.X + 170, instruction2Position.Y + 40), Color.White);
 
             // Instruction 3: Text
             string instruction3 = "3. Find a switch to activate the\n door and get to the next level.";
             Vector2 instruction3Size = helpFont.MeasureString(instruction3);
-            Vector2 instruction3Position = new Vector2(oddInstructionStart, instruction1Position.Y + gapBetweenInstructions);
+            Vector2 instruction3Position = new Vector2(oddInstructionStart, instruction1Position.Y + gapBetweenInstructions+40);
             spriteBatch.DrawString(helpFont, instruction3, instruction3Position, Color.White);
             // Instruction 3: Images
             spriteBatch.Draw(unActivatedSwitch, new Vector2(oddInstructionStart + 5, instruction3Position.Y + imagesYGap), Color.White);
@@ -145,13 +147,19 @@ namespace FinalProjectGameProgramming.GameStates
 
             // Instruction 4: Text
             // string instruction4 = "4. Find relics to increase your score\n and speed for the knight.";
-            string instruction4 = "4. Find relics to increase your\n score and speed for the knight.";
+            string instruction4 = "Relics give a bonus to your score.";
             Vector2 instruction4Size = helpFont.MeasureString(instruction4);
-            Vector2 instruction4Position = new Vector2(evenInstructionStart - instruction4Size.X, instruction3Position.Y);
+            Vector2 instruction4Position = new Vector2(evenInstructionStart - instruction4Size.X, instruction1Position.Y + gapBetweenInstructions);
             spriteBatch.DrawString(helpFont, instruction4, instruction4Position, Color.White);
             // Instruction 4: Images
-            spriteBatch.Draw(boost, new Vector2(instruction4Position.X, instruction4Position.Y + imagesYGap), Color.White);
-            spriteBatch.Draw(chest, new Vector2(instruction4Position.X + 80, instruction4Position.Y + imagesYGap), Color.White);
+            
+            spriteBatch.Draw(chest, new Vector2(instruction4Position.X+110, instruction4Position.Y + imagesYGap/2), Color.White);
+
+            string instruction5 = "Speed boost powerup.";
+            Vector2 instruction5Size = helpFont.MeasureString(instruction4);
+            Vector2 instruction5Position = new Vector2(evenInstructionStart - instruction5Size.X+instruction4Size.X/6, instruction4Position.Y +gapBetweenInstructions-60);
+            spriteBatch.DrawString(helpFont, instruction5, instruction5Position, Color.White);
+            spriteBatch.Draw(boost, new Vector2(instruction4Position.X+110, instruction5Position.Y + imagesYGap / 2 + 10), Color.White);
 
             // Draw the close button
             closedButton.Draw(spriteBatch);
