@@ -33,9 +33,9 @@ namespace FinalProjectGameProgramming
 		Player player;
 		Texture2D[] slimeRunFrames;
 		Rectangle monsterHitbox;
-        List<Relic> relics = new List<Relic>();
+		List<Relic> relics = new List<Relic>();
 
-        List<Monster> monsters = new List<Monster>();
+		List<Monster> monsters = new List<Monster>();
 
 		int timingDelay = 0;
 
@@ -144,15 +144,15 @@ namespace FinalProjectGameProgramming
 				bigZombieRunFrames[i] = _content.Load<Texture2D>($"big_zombie_run_anim_f{i}");
 			}
 			//Load relic open animation frames
-            Texture2D[] relicFrames = new Texture2D[3];
-            for (int i = 0; i < 3; i++)
-            {
-                relicFrames[i] = _content.Load<Texture2D>($"chest_full_open_anim_f{i}");
-            }
+			Texture2D[] relicFrames = new Texture2D[3];
+			for (int i = 0; i < 3; i++)
+			{
+				relicFrames[i] = _content.Load<Texture2D>($"chest_full_open_anim_f{i}");
+			}
 
 
-            // Load textures
-            backgroundTexture = _content.Load<Texture2D>("compositeBGLevel2");
+			// Load textures
+			backgroundTexture = _content.Load<Texture2D>("compositeBGLevel2");
 
 			door = _content.Load<Texture2D>("Level2_Door_Closed");
 			button = _content.Load<Texture2D>("L2_Button_not_pressed");
@@ -181,64 +181,64 @@ namespace FinalProjectGameProgramming
 				}
 			}
 			//used for drawing hitboxes
-            pixel = new Texture2D(_graphicsDevice, 1, 1);
-            pixel.SetData(new[] { Color.White });
+			pixel = new Texture2D(_graphicsDevice, 1, 1);
+			pixel.SetData(new[] { Color.White });
 
-            foreach (int[] spawnPoint in currentLevel.RelicSpawnPoints)
-            {
+			foreach (int[] spawnPoint in currentLevel.RelicSpawnPoints)
+			{
 
-                Vector2 position = new Vector2(spawnPoint[0] * tileSize + 5, spawnPoint[1] * tileSize);
-                relics.Add(new Relic(position, relicFrames, 0.08));
+				Vector2 position = new Vector2(spawnPoint[0] * tileSize + 5, spawnPoint[1] * tileSize);
+				relics.Add(new Relic(position, relicFrames, 0.08));
 
-            }
+			}
 
-            buttonClickSE = _content.Load<SoundEffect>("futuristic_button_click");
+			buttonClickSE = _content.Load<SoundEffect>("futuristic_button_click");
 			font = _content.Load<SpriteFont>("galleryFont");
 
 		}
 
 		public override void UpdateLevel(GameTime gameTime)
 		{
-            /*if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+			/*if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();*/
 
-            Rectangle playerHitbox = new Rectangle(
-                (int)player.Position.X + player.hitboxSideOffset,
-                (int)player.Position.Y + player.hitboxTopOffset,
-                player.width - 2 * player.hitboxSideOffset,
-                player.height - player.hitboxTopOffset);
+			Rectangle playerHitbox = new Rectangle(
+				(int)player.Position.X + player.hitboxSideOffset,
+				(int)player.Position.Y + player.hitboxTopOffset,
+				player.width - 2 * player.hitboxSideOffset,
+				player.height - player.hitboxTopOffset);
 
-            //will be used to update the monsters
-            foreach (Monster monster in monsters)
+			//will be used to update the monsters
+			foreach (Monster monster in monsters)
 			{
 				monster.Update(gameTime);
 				if (monster.Name == "Big Zombie")
 				{
-                    monsterHitbox = new Rectangle(
+					monsterHitbox = new Rectangle(
 												(int)monster.Position.X + 20,
 												(int)monster.Position.Y + 10,
 												monster.Texture.Width - 2 * 15,
 												monster.Texture.Height - 10
-                    );
-                }
+					);
+				}
 				else
 				{
-                    monsterHitbox = new Rectangle(
+					monsterHitbox = new Rectangle(
 												(int)monster.Position.X,
-                                                (int)monster.Position.Y,
-                                                monster.Texture.Width,
-                                                monster.Texture.Height);
-                }
-				
+												(int)monster.Position.Y,
+												monster.Texture.Width,
+												monster.Texture.Height);
+				}
+
 				if (collisionHandler.CheckCollisionWithEnvironment(monsterHitbox))
 				{
 					// Handle monster collision with the environment
 				}
-                if (playerHitbox.Intersects(monsterHitbox))
-                {
-                    gameOver = true;
-                }
-            }
+				if (playerHitbox.Intersects(monsterHitbox))
+				{
+					gameOver = true;
+				}
+			}
 			movementDelta = (float)gameTime.ElapsedGameTime.TotalSeconds * player.speed;
 
 			animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
@@ -251,28 +251,28 @@ namespace FinalProjectGameProgramming
 			// Movement input
 			Vector2 direction = Vector2.Zero;
 
-            KeyboardState state = Keyboard.GetState();
-            if (state.IsKeyDown(Keys.Up) || state.IsKeyDown(Keys.W))
-            {
-                direction.Y -= 1;
-            }
-            if (state.IsKeyDown(Keys.Down) || state.IsKeyDown(Keys.S))
-            {
-                direction.Y += 1;
-            }
-            if (state.IsKeyDown(Keys.Left) || state.IsKeyDown(Keys.A))
-            {
-                direction.X -= 1;
-                player.IsFacingRight = false;//change direction of player texture
-            }
+			KeyboardState state = Keyboard.GetState();
+			if (state.IsKeyDown(Keys.Up) || state.IsKeyDown(Keys.W))
+			{
+				direction.Y -= 1;
+			}
+			if (state.IsKeyDown(Keys.Down) || state.IsKeyDown(Keys.S))
+			{
+				direction.Y += 1;
+			}
+			if (state.IsKeyDown(Keys.Left) || state.IsKeyDown(Keys.A))
+			{
+				direction.X -= 1;
+				player.IsFacingRight = false;//change direction of player texture
+			}
 
-            if (state.IsKeyDown(Keys.Right) || state.IsKeyDown(Keys.D))
-            {
-                direction.X += 1;
-                player.IsFacingRight = true;//change direction of player texture
-            }
+			if (state.IsKeyDown(Keys.Right) || state.IsKeyDown(Keys.D))
+			{
+				direction.X += 1;
+				player.IsFacingRight = true;//change direction of player texture
+			}
 
-            if (direction != Vector2.Zero)
+			if (direction != Vector2.Zero)
 			{
 				currentAnimationKey = "playerRun";
 			}
@@ -299,13 +299,13 @@ namespace FinalProjectGameProgramming
 			}
 
 			//update relic
-            foreach (Relic relic in relics)
-            {
-                relic.Update(gameTime);
-            }
+			foreach (Relic relic in relics)
+			{
+				relic.Update(gameTime);
+			}
 
-            //get the center of the window
-            Microsoft.Xna.Framework.Vector2 tempVec = player.Position - new Microsoft.Xna.Framework.Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
+			//get the center of the window
+			Microsoft.Xna.Framework.Vector2 tempVec = player.Position - new Microsoft.Xna.Framework.Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
 
 			//update the camera position
 			camera.Position = new System.Numerics.Vector2(tempVec.X, tempVec.Y);
@@ -329,52 +329,66 @@ namespace FinalProjectGameProgramming
 			spriteBatch.Draw(greenSpikes, Vector2.Zero, Color.White);
 			spriteBatch.Draw(purpleSpikes, Vector2.Zero, Color.White);
 
+			SpriteEffects spriteEffects = player.IsFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+
 			AnimationHandler currentAnimation = animations[currentAnimationKey];
-			spriteBatch.Draw(currentAnimation.Frames[currentFrame], player.Position, Color.White);
+			spriteBatch.Draw(
+				texture: currentAnimation.Frames[currentFrame], // The texture to draw
+				position: player.Position,
+				sourceRectangle: null, // The area of the texture to draw (use null for the whole texture)
+				color: Color.White,
+				rotation: 0f, // The rotation of the texture 
+				origin: Vector2.Zero, // The origin of the texture 
+				scale: 1f, // The scale factor 
+				effects: spriteEffects, // The SpriteEffects value (SpriteEffects.FlipHorizontally)
+				layerDepth: 0f // The depth of the layer
+			);  
+			// spriteBatch.Draw(
+			// 	currentAnimation.Frames[currentFrame], player.Position, Color.White);
 
 			foreach (Monster monster in monsters)
 			{
-                //debugging hitbox
-                if (monster.Name == "Big Zombie")
-                {
-                    monsterHitbox = new Rectangle(
-                        (int)monster.Position.X + 20,
-                        (int)monster.Position.Y + 10,
-                        monster.Texture.Width - 2 * 20,
-                        monster.Texture.Height - 10
-                    );
-                }
-                else
-                {
-                    monsterHitbox = new Rectangle(
-                        (int)monster.Position.X,
-                        (int)monster.Position.Y,
-                        monster.Texture.Width,
-                        monster.Texture.Height
-                    );
-                }
+				//debugging hitbox
+				if (monster.Name == "Big Zombie")
+				{
+					monsterHitbox = new Rectangle(
+						(int)monster.Position.X + 20,
+						(int)monster.Position.Y + 10,
+						monster.Texture.Width - 2 * 20,
+						monster.Texture.Height - 10
+					);
+				}
+				else
+				{
+					monsterHitbox = new Rectangle(
+						(int)monster.Position.X,
+						(int)monster.Position.Y,
+						monster.Texture.Width,
+						monster.Texture.Height
+					);
+				}
 
-                // Draw the hitbox as a red rectangle
-                spriteBatch.Draw(pixel, monsterHitbox, Color.Red * 0.5f);
-                monster.Draw(spriteBatch);
+				// Draw the hitbox as a red rectangle
+				spriteBatch.Draw(pixel, monsterHitbox, Color.Red * 0.5f);
+				monster.Draw(spriteBatch);
 
-            }
+			}
 
-            foreach (Relic relic in relics)
-            {
-                relic.Draw(spriteBatch);
-            }
+			foreach (Relic relic in relics)
+			{
+				relic.Draw(spriteBatch);
+			}
 
-            //for Debugging hitbox Draw the semi - transparent hitbox
-            Color hitboxColorEnvironment = new Color(Color.Red, 0.5f); // Semi-transparent red
-            spriteBatch.Draw(pixel, player.EnvironmentHitbox, hitboxColorEnvironment);
-            Color hitboxColorMonster = new Color(Color.Red, 0.5f); // Semi-transparent red
-            spriteBatch.Draw(pixel, player.MonsterHitbox, hitboxColorMonster);
+			//for Debugging hitbox Draw the semi - transparent hitbox
+			Color hitboxColorEnvironment = new Color(Color.Red, 0.5f); // Semi-transparent red
+			spriteBatch.Draw(pixel, player.EnvironmentHitbox, hitboxColorEnvironment);
+			Color hitboxColorMonster = new Color(Color.Red, 0.5f); // Semi-transparent red
+			spriteBatch.Draw(pixel, player.MonsterHitbox, hitboxColorMonster);
 
-            spriteBatch.End();
+			spriteBatch.End();
 
-            //has to have it's own begin to not be affected by the camera positioning
-            spriteBatch.Begin();
+			//has to have it's own begin to not be affected by the camera positioning
+			spriteBatch.Begin();
 			// Draw the timer
 			spriteBatch.DrawString(font, $"Time: {elapsedTime.Minutes:D2}:{elapsedTime.Seconds:D2}", new Vector2(10, 10), Color.White);
 
@@ -389,26 +403,26 @@ namespace FinalProjectGameProgramming
 
 			if (levelComplete)
 			{
-                string transitionMessage = "Congratulations,you beat the game!\nYour score was " + score.GetScore();
-                // IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
-                gameStateHandler.ChangeState(new GameOverState(_graphics, gameStateHandler, _content, _graphicsDevice, font, transitionMessage, score.GetScore()));
-            }
+				string transitionMessage = "Congratulations,you beat the game!\nYour score was " + score.GetScore();
+				// IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
+				gameStateHandler.ChangeState(new GameOverState(_graphics, gameStateHandler, _content, _graphicsDevice, font, transitionMessage, score.GetScore()));
+			}
 			if (gameOver)
 			{
-                string transitionMessage = "Game Over!\nYour score is " + score.GetScore();
-                // IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
-                gameStateHandler.ChangeState(new GameOverState(_graphics, gameStateHandler, _content, _graphicsDevice, font, transitionMessage, score.GetScore()));
+				string transitionMessage = "Game Over!\nYour score is " + score.GetScore();
+				// IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
+				gameStateHandler.ChangeState(new GameOverState(_graphics, gameStateHandler, _content, _graphicsDevice, font, transitionMessage, score.GetScore()));
 
-            }
+			}
 			spriteBatch.End();
 		}
 
 		private string CheckForCollision(Vector2 position)
 		{
 			Rectangle playerHitbox = new Rectangle(
-				(int)position.X + player.hitboxSideOffset, 
-				(int)position.Y + player.hitboxTopOffset, 
-				player.width - 2 * player.hitboxSideOffset, 
+				(int)position.X + player.hitboxSideOffset,
+				(int)position.Y + player.hitboxTopOffset,
+				player.width - 2 * player.hitboxSideOffset,
 				player.height - player.hitboxTopOffset);
 
 			// Check each corner of the player's bounding box for collision
@@ -425,48 +439,48 @@ namespace FinalProjectGameProgramming
 
 				if (currentLevel.Grid[gridY, gridX] == 1)
 				{
-                    return "wall"; // Collision detected
-                }
-                else if (currentLevel.Grid[gridY, gridX] == 2)
-                {
-                    Rectangle relicHitbox = new Rectangle(
-                        gridX * tileSize + SPIKE_HITBOX_OFFSET,
-                        gridY * tileSize + SPIKE_HITBOX_OFFSET,
-                        tileSize - 2 * SPIKE_HITBOX_OFFSET,
-                        tileSize - 2 * SPIKE_HITBOX_OFFSET
-                    );
+					return "wall"; // Collision detected
+				}
+				else if (currentLevel.Grid[gridY, gridX] == 2)
+				{
+					Rectangle relicHitbox = new Rectangle(
+						gridX * tileSize + SPIKE_HITBOX_OFFSET,
+						gridY * tileSize + SPIKE_HITBOX_OFFSET,
+						tileSize - 2 * SPIKE_HITBOX_OFFSET,
+						tileSize - 2 * SPIKE_HITBOX_OFFSET
+					);
 
-                    // Check if the player's hitbox intersects with the relic hitbox
-                    if (playerHitbox.Intersects(relicHitbox))
-                    {
-                        Relic removedRelic = null;
-                        foreach (Relic relic in relics)
-                        {
-                            //detecting which relic was hit
-                            Vector2 relicPosition = new Vector2(gridX * tileSize + 5, gridY * tileSize);
-                            if (relicPosition == relic.Position)
-                            {
-                                //making sure relic was not already opened
-                                if (relic.IsDeleted == false)
-                                {
-                                    relic.IsDeleted = true;
-                                    int relicScore = relic.Score;
-                                    score.AddScore(relicScore);
-                                    removedRelic = relic;
-                                    SFXHandler.RelicOpenSound.Play();
-                                }
+					// Check if the player's hitbox intersects with the relic hitbox
+					if (playerHitbox.Intersects(relicHitbox))
+					{
+						Relic removedRelic = null;
+						foreach (Relic relic in relics)
+						{
+							//detecting which relic was hit
+							Vector2 relicPosition = new Vector2(gridX * tileSize + 5, gridY * tileSize);
+							if (relicPosition == relic.Position)
+							{
+								//making sure relic was not already opened
+								if (relic.IsDeleted == false)
+								{
+									relic.IsDeleted = true;
+									int relicScore = relic.Score;
+									score.AddScore(relicScore);
+									removedRelic = relic;
+									SFXHandler.RelicOpenSound.Play();
+								}
 
-                            }
-                        }
-                        if (removedRelic != null)
-                        {
-                            //remove relic from list
-                            relics.Remove(removedRelic);
-                        }
-                        return "relic";
-                    }
-                }
-                if (currentLevel.Grid[gridY, gridX] == 3)
+							}
+						}
+						if (removedRelic != null)
+						{
+							//remove relic from list
+							relics.Remove(removedRelic);
+						}
+						return "relic";
+					}
+				}
+				if (currentLevel.Grid[gridY, gridX] == 3)
 				{
 					if (!buttonPressed)
 					{
@@ -518,24 +532,24 @@ namespace FinalProjectGameProgramming
 					}
 
 				}
-                if (currentLevel.Grid[gridY, gridX] == 11)
-                {
-                    Rectangle noFloorHitbox = new Rectangle(
-                        gridX * tileSize + SPIKE_HITBOX_OFFSET,
-                        gridY * tileSize + SPIKE_HITBOX_OFFSET,
-                        tileSize - 2 * SPIKE_HITBOX_OFFSET,
-                        tileSize - 2 * SPIKE_HITBOX_OFFSET
-                    );
+				if (currentLevel.Grid[gridY, gridX] == 11)
+				{
+					Rectangle noFloorHitbox = new Rectangle(
+						gridX * tileSize + SPIKE_HITBOX_OFFSET,
+						gridY * tileSize + SPIKE_HITBOX_OFFSET,
+						tileSize - 2 * SPIKE_HITBOX_OFFSET,
+						tileSize - 2 * SPIKE_HITBOX_OFFSET
+					);
 
-                    // Check if the player's hitbox intersects with the spike hitbox
-                    if (playerHitbox.Intersects(noFloorHitbox))
-                    {
-                        // Handle collision with no floor
-                        gameOver = true;
-                    }
+					// Check if the player's hitbox intersects with the spike hitbox
+					if (playerHitbox.Intersects(noFloorHitbox))
+					{
+						// Handle collision with no floor
+						gameOver = true;
+					}
 
-                }
-            }
+				}
+			}
 			return "nothing"; // No collision
 		}
 

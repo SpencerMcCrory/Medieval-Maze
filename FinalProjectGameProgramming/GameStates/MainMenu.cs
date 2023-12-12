@@ -18,7 +18,7 @@ namespace FinalProjectGameProgramming.GameStates
     internal class MainMenu : IGameState
     {
         private SpriteFont menuFont;
-        private string[] menuItems = { "Start Game", "Leaderboard", "Exit" };
+        private string[] menuItems = { "Start Game", "Leaderboard", "Help", "About", "Exit" };
         private int selectedIndex = 0;
         private GameStateHandler gameStateHandler;
         GraphicsDeviceManager _graphics;
@@ -33,6 +33,8 @@ namespace FinalProjectGameProgramming.GameStates
         private Button playButton;
         private Button exitButton;
         private Button leaderBoardButton;
+        private Button aboutButton;
+        private Button helpButton;
 
         //to get the button to only execute on release and get animations
         private bool isHovering;
@@ -60,14 +62,24 @@ namespace FinalProjectGameProgramming.GameStates
             // Create the play button
             playButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Play");
             playButton.SetPosition(new Vector2(centerX, 100)); // Set position for Play button
+            
             // Create the leaderboard button
             leaderBoardButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Leaderboard");
             leaderBoardButton.SetPosition(new Vector2(centerX, playButton.GetPosition().Y + buttonGap)); // Set position for Leaderboard button
+
+            // create the help button
+            helpButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Help");
+            helpButton.SetPosition(new Vector2(centerX, leaderBoardButton.GetPosition().Y + buttonGap)); // Set position for Help button
+
+            // Create the about button
+            aboutButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "About");
+            aboutButton.SetPosition(new Vector2(centerX, helpButton.GetPosition().Y + buttonGap)); // Set position for About button
+
             // Create the exit button
             exitButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Exit");
-            exitButton.SetPosition(new Vector2(centerX, leaderBoardButton.GetPosition().Y + buttonGap)); // Set position for Exit button
+            exitButton.SetPosition(new Vector2(centerX, aboutButton.GetPosition().Y + buttonGap)); // Set position for Exit button
             // Add the buttons to the array
-            buttons = new Button[] { playButton, leaderBoardButton, exitButton };
+            buttons = new Button[] { playButton, leaderBoardButton, helpButton, aboutButton, exitButton };
         }
 
         public void Enter()
@@ -114,12 +126,23 @@ namespace FinalProjectGameProgramming.GameStates
             // Leaderboard button action
             if (buttons[1].isClicked)
             {
-                /*gameStateHandler.ChangeState(new PlayingState(_graphics, _content, _graphicsDevice, 1));*/
                 gameStateHandler.ChangeState(new LeaderBoardState(_graphics, _content, gameStateHandler, _graphicsDevice, menuFont));
             }
 
-            // Exit button action
+            // Help button action
             if (buttons[2].isClicked)
+            {
+                gameStateHandler.ChangeState(new HelpState(_graphics, _content, gameStateHandler, _graphicsDevice, menuFont));
+            }
+
+            // About button action
+            if (buttons[3].isClicked)
+            {
+                gameStateHandler.ChangeState(new AboutState(_graphics, _content, gameStateHandler, _graphicsDevice, menuFont));
+            }
+
+            // Exit button action
+            if (buttons[4].isClicked)
             {
                 Environment.Exit(0);
             }
@@ -130,9 +153,16 @@ namespace FinalProjectGameProgramming.GameStates
             // TODO: Add a background image
             spriteBatch.Begin();
             spriteBatch.Draw(backgroundImage, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
+            // Draw play button
             playButton.Draw(spriteBatch);
-            exitButton.Draw(spriteBatch);
+            // Draw leaderboard button
             leaderBoardButton.Draw(spriteBatch);
+            // Draw help button
+            helpButton.Draw(spriteBatch);
+            // Draw about button
+            aboutButton.Draw(spriteBatch);
+            // Draw exit button
+            exitButton.Draw(spriteBatch);
             spriteBatch.End();
         }
     }

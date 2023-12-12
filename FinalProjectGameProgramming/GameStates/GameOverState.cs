@@ -70,8 +70,9 @@ namespace FinalProjectGameProgramming.GameStates
                 {
                     if (key == Keys.Enter)
                     {
+                        string userName = string.IsNullOrEmpty(userInput.ToString()) ? "User" : userInput.ToString().Trim();
                         playerScore = new Dictionary<string, float>(){
-                            {userInput.ToString(), score}
+                            {userName, score}
                         };
                         // Change to next state
 
