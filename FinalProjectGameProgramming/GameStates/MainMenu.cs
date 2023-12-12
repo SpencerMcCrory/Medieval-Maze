@@ -34,6 +34,8 @@ namespace FinalProjectGameProgramming.GameStates
         private CustomButton exitButton;
         private CustomButton loadSaveButton;
         private CustomButton leaderBoardButton;
+        private CustomButton helpButton;
+        private CustomButton aboutButton;
 
         //to get the button to only execute on release and get animations
         private bool isHovering;
@@ -65,22 +67,22 @@ namespace FinalProjectGameProgramming.GameStates
             loadSaveButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Load Game");
             loadSaveButton.SetPosition(new Vector2(centerX, playButton.GetPosition().Y + buttonGap)); // Set position for Leaderboard button
             // Create the leaderboard button
-            leaderBoardButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Leaderboard");
-            leaderBoardButton.SetPosition(new Vector2(centerX, playButton.GetPosition().Y + buttonGap)); // Set position for Leaderboard button
+            leaderBoardButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Leaderboard");
+            leaderBoardButton.SetPosition(new Vector2(centerX, loadSaveButton.GetPosition().Y + buttonGap)); // Set position for Leaderboard button
 
             // create the help button
-            helpButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Help");
+            helpButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Help");
             helpButton.SetPosition(new Vector2(centerX, leaderBoardButton.GetPosition().Y + buttonGap)); // Set position for Help button
 
             // Create the about button
-            aboutButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "About");
+            aboutButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "About");
             aboutButton.SetPosition(new Vector2(centerX, helpButton.GetPosition().Y + buttonGap)); // Set position for About button
 
             // Create the exit button
-            exitButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Exit");
+            exitButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Exit");
             exitButton.SetPosition(new Vector2(centerX, aboutButton.GetPosition().Y + buttonGap)); // Set position for Exit button
             // Add the buttons to the array
-            buttons = new Button[] { playButton, loadSaveButton, leaderBoardButton, helpButton, aboutButton, exitButton };
+            buttons = new CustomButton[] { playButton, loadSaveButton, leaderBoardButton, helpButton, aboutButton, exitButton };
         }
 
         public void Enter()
@@ -160,13 +162,13 @@ namespace FinalProjectGameProgramming.GameStates
             // Help button action
             if (helpButton.isClicked)
             {
-                gameStateHandler.ChangeState(new HelpState(_graphics, _content, gameStateHandler, _graphicsDevice, menuFont));
+                gameStateHandler.ChangeState(new HelpState(gameStateHandler, menuFont));
             }
 
             // About button action
             if (aboutButton.isClicked)
             {
-                gameStateHandler.ChangeState(new AboutState(_graphics, _content, gameStateHandler, _graphicsDevice, menuFont));
+                gameStateHandler.ChangeState(new AboutState( gameStateHandler, menuFont));
             }
 
             // Exit button action

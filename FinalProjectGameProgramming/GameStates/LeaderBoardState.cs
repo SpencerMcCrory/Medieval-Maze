@@ -108,7 +108,7 @@ namespace FinalProjectGameProgramming.GameStates
 
             // Loop through the top 5 scores
             int nameStartingPosition = 300;
-            int scoreStartingPosition = _graphics.PreferredBackBufferWidth - 380;
+            int scoreStartingPosition = graphicsDeviceManager.PreferredBackBufferWidth - 380;
             int yStartingPosition = 200;
             int yIncrement = 50;
             for (int i = 0; i < leaderBoardScores.Count; i++)
