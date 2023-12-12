@@ -12,11 +12,11 @@ namespace FinalProjectGameProgramming.GameStates
 {
     internal class LeaderBoardState : IGameState
     {
-        private GraphicsDeviceManager _graphics;
-        private GameStateHandler _gameStateHandler;
+        private GraphicsDeviceManager graphicsDeviceManager;
+        private GameStateHandler gameStateHandler;
         private SpriteFont _font;
-        private ContentManager _content;
-        private GraphicsDevice _graphicsDevice;
+        private ContentManager content;
+        private GraphicsDevice graphicsDevice;
         private MouseState mState;
         private Texture2D leaderBoardBG;
         private int screenWidth;
@@ -43,16 +43,16 @@ namespace FinalProjectGameProgramming.GameStates
         private Dictionary<string, float> _userScore = new Dictionary<string, float>(){
             {"User", 0}
         };
-        private Button closedButton;
+        private CustomButton closedButton;
 
 
-        public LeaderBoardState(GraphicsDeviceManager graphics, ContentManager content, GameStateHandler gameStateHandler, GraphicsDevice graphicsDevice, SpriteFont font, Dictionary<string, float> userScore = null)
+        public LeaderBoardState(GameStateHandler gameStateHandler, SpriteFont font, Dictionary<string, float> userScore = null)
         {
-            _graphics = graphics;
-            _content = content;
-            _gameStateHandler = gameStateHandler;
+            this.gameStateHandler = gameStateHandler;
+            graphicsDeviceManager = gameStateHandler.GraphicsDeviceManager;
+            content = gameStateHandler.Content;
             _font = font;
-            _graphicsDevice = graphicsDevice;
+            graphicsDevice = gameStateHandler.GraphicsDevice;
             _userScore = userScore;
             screenWidth = graphicsDevice.Viewport.Width;
             screenHeight = graphicsDevice.Viewport.Height;
@@ -63,7 +63,7 @@ namespace FinalProjectGameProgramming.GameStates
             Texture2D buttonPressedTexture = content.Load<Texture2D>("Button_Release_01a1");
 
             // Create the close button
-            closedButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, _font, "X");
+            closedButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, _font, "X");
             closedButton.SetPosition(new Vector2(100, 10)); // Set position for Close button
             closedButton.SetSize(new Vector2(50, 50)); // Set size for Close button
 
@@ -81,7 +81,7 @@ namespace FinalProjectGameProgramming.GameStates
         }
 
         public void Enter() {
-            leaderBoardBG = _content.Load<Texture2D>("LeaderBoardBG");
+            leaderBoardBG = content.Load<Texture2D>("LeaderBoardBG");
         }
 
         public void Exit() { }
@@ -92,7 +92,7 @@ namespace FinalProjectGameProgramming.GameStates
             closedButton.Update(mState);
             if (closedButton.isClicked)
             {
-                _gameStateHandler.ChangeState(new MainMenu(_gameStateHandler, _font, _graphics, _content, _graphicsDevice));
+                gameStateHandler.ChangeState(new MainMenu(gameStateHandler, _font));
             }
         }
 
@@ -117,7 +117,7 @@ namespace FinalProjectGameProgramming.GameStates
                 string playerScore = score.Values.First().ToString();
                 // Calculate positions
                 Vector2 namePosition = new Vector2(300, 200 + (i * 50));
-                Vector2 scorePosition = new Vector2(_graphics.PreferredBackBufferWidth - 300, 200 + (i * 50));
+                Vector2 scorePosition = new Vector2(graphicsDeviceManager.PreferredBackBufferWidth - 300, 200 + (i * 50));
 
                 // Draw the name and score
                 spriteBatch.DrawString(_font, name, namePosition, Color.White);
@@ -133,7 +133,7 @@ namespace FinalProjectGameProgramming.GameStates
 
         private void DrawLine(SpriteBatch spriteBatch, Vector2 start, Vector2 end, Color color, int thickness = 2)
         {
-            Texture2D pixel = new Texture2D(_graphicsDevice, 1, 1);
+            Texture2D pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData(new[] { Color.White });
             float angle = (float)Math.Atan2(end.Y - start.Y, end.X - start.X);
             float length = Vector2.Distance(start, end);

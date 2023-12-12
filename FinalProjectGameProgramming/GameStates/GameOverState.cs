@@ -13,7 +13,7 @@ namespace FinalProjectGameProgramming.GameStates
 {
     internal class GameOverState : IGameState
     {
-        private GraphicsDeviceManager graphics;
+        private GraphicsDeviceManager graphicsDeviceManager;
         private GameStateHandler gameStateHandler;
         private ContentManager content;
         private GraphicsDevice graphicsDevice;
@@ -28,15 +28,17 @@ namespace FinalProjectGameProgramming.GameStates
         private bool isEnteringName = true;
         private Dictionary<string, float> playerScore;
 
-        public GameOverState(GraphicsDeviceManager graphics, GameStateHandler gameStateHandler, ContentManager content, GraphicsDevice graphicsDevice, SpriteFont font, string message, float score)
+        public GameOverState(GameStateHandler gameStateHandler, SpriteFont font, string message, float score)
         {
-            this.graphics = graphics;
             this.gameStateHandler = gameStateHandler;
-            this.content = content;
-            this.graphicsDevice = graphicsDevice;
+            graphicsDeviceManager = gameStateHandler.GraphicsDeviceManager;
+            this.content = gameStateHandler.Content;
+            this.graphicsDevice = gameStateHandler.GraphicsDevice;
             this.font = font;
             this.message = message;
             this.score = score;
+            SaveHandler save = new SaveHandler();
+            save.DeleteSave();
         }
 
         public void Enter() { }
@@ -75,7 +77,7 @@ namespace FinalProjectGameProgramming.GameStates
                         };
                         // Change to next state
 
-                        nextState = new LeaderBoardState(graphics, content, gameStateHandler, graphicsDevice, font, playerScore);
+                        nextState = new LeaderBoardState( gameStateHandler, font, playerScore);
                         gameStateHandler.ChangeState(nextState);
                         // Toggle name entry mode
                         isEnteringName = !isEnteringName;
@@ -149,8 +151,8 @@ namespace FinalProjectGameProgramming.GameStates
             Vector2 textSize = font.MeasureString(message);
             // calculate the position of the text
             Vector2 textPosition = new Vector2(
-                (graphics.PreferredBackBufferWidth - textSize.X) / 4,
-                (graphics.PreferredBackBufferHeight - textSize.Y) / 4
+                (graphicsDeviceManager.PreferredBackBufferWidth - textSize.X) / 4,
+                (graphicsDeviceManager.PreferredBackBufferHeight - textSize.Y) / 4
             );
             spriteBatch.DrawString(font, message, textPosition, Color.White);
 

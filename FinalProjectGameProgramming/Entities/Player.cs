@@ -13,7 +13,7 @@ namespace FinalProjectGameProgramming.Entities
     {
         public Player()
         {
-            speed = 300f;
+            speed = 600f;
             height = 56;
             width = 32;
             hitboxTopOffset = 40;

@@ -11,7 +11,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows.Forms;
 
 namespace FinalProjectGameProgramming.GameStates
 {
@@ -21,18 +21,19 @@ namespace FinalProjectGameProgramming.GameStates
         private string[] menuItems = { "Start Game", "Leaderboard", "Exit" };
         private int selectedIndex = 0;
         private GameStateHandler gameStateHandler;
-        GraphicsDeviceManager _graphics;
-        ContentManager _content;
-        GraphicsDevice _graphicsDevice;
+        GraphicsDeviceManager graphicsDeviceManager;
+        ContentManager content;
+        GraphicsDevice graphicsDevice;
         Texture2D buttonReleasedTexture;
         Texture2D buttonPressedTexture;
         Texture2D backgroundImage;
 
 
-        private Button[] buttons;
-        private Button playButton;
-        private Button exitButton;
-        private Button leaderBoardButton;
+        private CustomButton[] buttons;
+        private CustomButton playButton;
+        private CustomButton exitButton;
+        private CustomButton loadSaveButton;
+        private CustomButton leaderBoardButton;
 
         //to get the button to only execute on release and get animations
         private bool isHovering;
@@ -41,33 +42,36 @@ namespace FinalProjectGameProgramming.GameStates
         Song backgroundMusic;
         private int buttonGap = 120;
 
-        public MainMenu(GameStateHandler gameStateHandler, SpriteFont font, GraphicsDeviceManager graphics, ContentManager content, GraphicsDevice graphicsDevice)
+        public MainMenu(GameStateHandler gameStateHandler, SpriteFont font)
         {
             this.gameStateHandler = gameStateHandler;
             menuFont = font;
-            _graphics = graphics;
-            _content = content;
-            _graphicsDevice = graphicsDevice;
+            graphicsDeviceManager = gameStateHandler.GraphicsDeviceManager;
+            content = gameStateHandler.Content;
+            graphicsDevice = gameStateHandler.GraphicsDevice;
 
             Texture2D buttonReleasedTexture = content.Load<Texture2D>("Button_Release_01a2");
             Texture2D buttonPressedTexture = content.Load<Texture2D>("Button_Release_01a1");// Load your button texture
             backgroundImage = content.Load<Texture2D>("MedievalMaze4");
 
             // Get the center position of the screen for the button
-            Button button = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "");
-            float centerX = (_graphics.PreferredBackBufferWidth - button.GetSize().X) / 2;
+            CustomButton button = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "");
+            float centerX = (graphicsDeviceManager.PreferredBackBufferWidth - button.GetSize().X) / 2;
 
             // Create the play button
-            playButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Play");
+            playButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Play");
             playButton.SetPosition(new Vector2(centerX, 100)); // Set position for Play button
+            // Create the load save button
+            loadSaveButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Load Game");
+            loadSaveButton.SetPosition(new Vector2(centerX, playButton.GetPosition().Y + buttonGap)); // Set position for Leaderboard button
             // Create the leaderboard button
-            leaderBoardButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Leaderboard");
-            leaderBoardButton.SetPosition(new Vector2(centerX, playButton.GetPosition().Y + buttonGap)); // Set position for Leaderboard button
+            leaderBoardButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Leaderboard");
+            leaderBoardButton.SetPosition(new Vector2(centerX, loadSaveButton.GetPosition().Y + buttonGap)); // Set position for Leaderboard button
             // Create the exit button
-            exitButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Exit");
+            exitButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Exit");
             exitButton.SetPosition(new Vector2(centerX, leaderBoardButton.GetPosition().Y + buttonGap)); // Set position for Exit button
             // Add the buttons to the array
-            buttons = new Button[] { playButton, leaderBoardButton, exitButton };
+            buttons = new CustomButton[] { playButton, loadSaveButton, leaderBoardButton, exitButton };
         }
 
         public void Enter()
@@ -82,7 +86,7 @@ namespace FinalProjectGameProgramming.GameStates
             // Clean up resources if needed
 
 
-            // Dispose textures if they implement IDisposable
+            // Dispose textures
             buttonReleasedTexture?.Dispose();
             buttonPressedTexture?.Dispose();
 
@@ -91,7 +95,7 @@ namespace FinalProjectGameProgramming.GameStates
             buttonPressedTexture = null;
 
 
-            // Optionally, force garbage collection (use sparingly)
+            // Force garbage collection
             GC.Collect();
         }
 
@@ -99,28 +103,55 @@ namespace FinalProjectGameProgramming.GameStates
         {
             MouseState mouse = Mouse.GetState();
 
-            foreach (Button button in buttons)
+            foreach (CustomButton button in buttons)
             {
                 button.Update(mouse);
             }
 
             // Start Game button action
-            if (buttons[0].isClicked)
+            if (playButton.isClicked)
             {
+                playButton.isClicked = false;
                 /*gameStateHandler.ChangeState(new PlayingState(_graphics, _content, _graphicsDevice, 1));*/
-                gameStateHandler.ChangeState(new PlayingState(_graphics, _content, _graphicsDevice, gameStateHandler, 1, 0));
+                gameStateHandler.ChangeState(new PlayingState(gameStateHandler, 1, 0));
             }
 
             // Leaderboard button action
-            if (buttons[1].isClicked)
+            if (leaderBoardButton.isClicked)
             {
+                leaderBoardButton.isClicked = false;
                 /*gameStateHandler.ChangeState(new PlayingState(_graphics, _content, _graphicsDevice, 1));*/
-                gameStateHandler.ChangeState(new LeaderBoardState(_graphics, _content, gameStateHandler, _graphicsDevice, menuFont));
+                gameStateHandler.ChangeState(new LeaderBoardState(gameStateHandler, menuFont));
+            }
+            if (loadSaveButton.isClicked)
+            {
+                loadSaveButton.isClicked = false;
+                SaveHandler save = new SaveHandler();
+                string[] saveFile = save.LoadFile();
+                try { 
+                    if (saveFile == null) {
+                    throw new ArgumentException("No save file found. If you died after your save, your file gets deleted.");
+                    }
+                    if (saveFile.Length != 2)
+                    {
+                        throw new ArgumentException("File corrupted.\nFile format does not match Medieval Maze save format");
+                    }
+                    int score = int.Parse(saveFile[0]);
+                    int level = int.Parse(saveFile[1]);
+                    gameStateHandler.ChangeState(new PlayingState(gameStateHandler, level, score));
+
+                } catch(Exception ex) {
+                    System.Windows.Forms.MessageBox.Show(ex.Message,"No file found",MessageBoxButtons.OKCancel);
+                }
+
+
+
             }
 
             // Exit button action
-            if (buttons[2].isClicked)
+            if (exitButton.isClicked)
             {
+                exitButton.isClicked = false;
                 Environment.Exit(0);
             }
         }
@@ -129,8 +160,9 @@ namespace FinalProjectGameProgramming.GameStates
         {
             // TODO: Add a background image
             spriteBatch.Begin();
-            spriteBatch.Draw(backgroundImage, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
+            spriteBatch.Draw(backgroundImage, new Rectangle(0, 0, graphicsDeviceManager.PreferredBackBufferWidth, graphicsDeviceManager.PreferredBackBufferHeight), Color.White);
             playButton.Draw(spriteBatch);
+            loadSaveButton.Draw(spriteBatch);
             exitButton.Draw(spriteBatch);
             leaderBoardButton.Draw(spriteBatch);
             spriteBatch.End();

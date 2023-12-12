@@ -298,13 +298,13 @@ namespace FinalProjectGameProgramming
 
 			string collidingWith = CheckForCollision(newPlayerPosition);
 			// Check for collisions with the wall
-			if (collidingWith != "wall")
+			if (collidingWith != "asdfasdf")//change back to wall
 			{
 				// Apply movement
 				player.Position = newPlayerPosition;
 			}
 
-            foreach (Relic relic in relics)
+			foreach (Relic relic in relics)
             {
                 relic.Update(gameTime);
             }
@@ -407,14 +407,14 @@ namespace FinalProjectGameProgramming
 				int totalTime = (int)elapsedTime.TotalSeconds;
 				score.CalculateTimeScore(totalTime);
 				string transitionMessage = "Congratulations, you beat level 1!\nYour score is " + score.GetScore() + "\nPress ENTER to start Level 2.";
-				IGameState nextState = new PlayingState(_graphics, _content, _graphicsDevice, gameStateHandler, 2, score.CurrentScore);
-				gameStateHandler.ChangeState(new LevelTransitionState(_graphics, gameStateHandler, font, transitionMessage, nextState));
+				IGameState nextState = new PlayingState(gameStateHandler, 2, score.CurrentScore);
+				gameStateHandler.ChangeState(new LevelTransitionState(this.gameStateHandler, font, transitionMessage, nextState,2,score.GetScore()));
 			}
 			if (gameOver)
 			{
 				string transitionMessage = "Game Over!\nYour score is " + score.GetScore();
 				// IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
-				gameStateHandler.ChangeState(new GameOverState(_graphics, gameStateHandler, _content, _graphicsDevice, font, transitionMessage, score.GetScore()));
+				gameStateHandler.ChangeState(new GameOverState(gameStateHandler, font, transitionMessage, score.GetScore()));
 			}
 			spriteBatch.End();
 		}

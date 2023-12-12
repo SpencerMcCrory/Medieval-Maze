@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace FinalProjectGameProgramming.Entities
 {
-    public class Button
+    public class CustomButton
     {
         Texture2D releasedButtonTexture;
         Texture2D pressedButtonTexture;
         Texture2D currentTexture;
         Vector2 position;
         Rectangle rectangle;
-        string buttonText;
+        public string buttonText {  get; private set; }
         SpriteFont font;
 
         Color color = new Color(255, 255, 255, 255);
@@ -26,14 +26,14 @@ namespace FinalProjectGameProgramming.Entities
         private bool isPressed;
         private bool wasPressedLastFrame;
 
-        public Button(Texture2D releasedTexture, Texture2D pressedTexture, GraphicsDevice graphics, SpriteFont newFont, string text)
+        public CustomButton(Texture2D releasedTexture, Texture2D pressedTexture, GraphicsDevice graphicsDevice, SpriteFont newFont, string text)
         {
             releasedButtonTexture = releasedTexture;
             pressedButtonTexture = pressedTexture;
             font = newFont;
             buttonText = text;
             // Set the size of the button
-            size = new Vector2(graphics.Viewport.Width / 2, graphics.Viewport.Height / 8);
+            size = new Vector2(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height / 8);
             currentTexture = releasedButtonTexture;
         }
 
@@ -82,7 +82,11 @@ namespace FinalProjectGameProgramming.Entities
         public void SetSize(Vector2 newSize)
         {
             size = newSize;
-        }   
+        }
+        public void SetText(string newText)
+        {
+            buttonText = newText;
+        }
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(currentTexture, rectangle, color);

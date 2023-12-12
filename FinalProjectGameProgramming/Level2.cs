@@ -329,10 +329,23 @@ namespace FinalProjectGameProgramming
 			spriteBatch.Draw(greenSpikes, Vector2.Zero, Color.White);
 			spriteBatch.Draw(purpleSpikes, Vector2.Zero, Color.White);
 
-			AnimationHandler currentAnimation = animations[currentAnimationKey];
-			spriteBatch.Draw(currentAnimation.Frames[currentFrame], player.Position, Color.White);
+			//draw the player based on what way he is facing
+            SpriteEffects spriteEffects = player.IsFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            //draw player animation current frame
+            AnimationHandler currentAnimation = animations[currentAnimationKey];
+            //to use sprite effects you need to include other perameters
+            spriteBatch.Draw(
+                                texture: currentAnimation.Frames[currentFrame], // The texture to draw
+                                position: player.Position,
+                                sourceRectangle: null, // The area of the texture to draw (use null for the whole texture)
+                                color: Color.White,
+                                rotation: 0f, // The rotation of the texture 
+                                origin: Vector2.Zero, // The origin of the texture 
+                                scale: 1f, // The scale factor 
+                                effects: spriteEffects, // The SpriteEffects value (SpriteEffects.FlipHorizontally)
+                                layerDepth: 0f); // The depth of the layer
 
-			foreach (Monster monster in monsters)
+            foreach (Monster monster in monsters)
 			{
                 //debugging hitbox
                 if (monster.Name == "Big Zombie")
@@ -391,13 +404,13 @@ namespace FinalProjectGameProgramming
 			{
                 string transitionMessage = "Congratulations,you beat the game!\nYour score was " + score.GetScore();
                 // IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
-                gameStateHandler.ChangeState(new GameOverState(_graphics, gameStateHandler, _content, _graphicsDevice, font, transitionMessage, score.GetScore()));
+                gameStateHandler.ChangeState(new GameOverState( gameStateHandler, font, transitionMessage, score.GetScore()));
             }
 			if (gameOver)
 			{
                 string transitionMessage = "Game Over!\nYour score is " + score.GetScore();
                 // IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
-                gameStateHandler.ChangeState(new GameOverState(_graphics, gameStateHandler, _content, _graphicsDevice, font, transitionMessage, score.GetScore()));
+                gameStateHandler.ChangeState(new GameOverState(gameStateHandler, font, transitionMessage, score.GetScore()));
 
             }
 			spriteBatch.End();
@@ -476,25 +489,28 @@ namespace FinalProjectGameProgramming
 					}
 					//sound is off by about 8 miliseconds
 					timingDelay++;
-					if (timingDelay > 8)
+					if (timingDelay == 8)
 					{
 						door = _content.Load<Texture2D>("Level2_Door_Open");
 						button = _content.Load<Texture2D>("L2_Button_pressed");
 						greenSpikes = _content.Load<Texture2D>("Spikes_green_button_pressed");
 						purpleSpikes = _content.Load<Texture2D>("Spikes_purple_button_clicked");
-					}
+
+                        string csvFileRelativePath = "Level2_IntGrid_Switch_Clicked.csv";
+                        string csvFilePath = Path.Combine(rootContentDirectory, csvFileRelativePath);
+                        if (File.Exists(csvFilePath))
+                        {
+                            currentLevel = new LevelHandler(csvFilePath);
+                        }
+                        else
+                        {
+                            throw new FileNotFoundException("Unable to load walls.csv. File not found.");
+                        }
+                        UnloadContent();
+                    }
 					//string csvFilePath = "C:\\PROG2370-23F\\Monogame\\FinalProjectGameProgramming\\FinalProjectGameProgramming\\Content\\Level2_IntGrid_Switch_Clicked.csv";
-					string csvFileRelativePath = "Level2_IntGrid_Switch_Clicked.csv";
-					string csvFilePath = Path.Combine(rootContentDirectory, csvFileRelativePath);
-					if (File.Exists(csvFilePath))
-					{
-						currentLevel = new LevelHandler(csvFilePath);
-					}
-					else
-					{
-						throw new FileNotFoundException("Unable to load walls.csv. File not found.");
-					}
-					return "button";
+					
+                    return "button";
 				}
 				if (currentLevel.Grid[gridY, gridX] == 6)
 				{
@@ -541,7 +557,7 @@ namespace FinalProjectGameProgramming
 
 		public override void UnloadContent()
 		{
-			throw new NotImplementedException();
+			GC.Collect();
 		}
 	}
 }
