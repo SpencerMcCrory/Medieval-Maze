@@ -316,6 +316,7 @@ namespace FinalProjectGameProgramming
                     // Call a method on the power-up to handle the player collecting it
                     powerUp.Collect(player);
                     powerUp.SetDurationTimer(elapsedTime.TotalSeconds);
+                    SFXHandler.SpeedPotion.Play();
 
 
                     // Optionally play a sound effect or animation to indicate collection
@@ -460,6 +461,7 @@ namespace FinalProjectGameProgramming
             }
 			if (gameOver)
 			{
+                SFXHandler.PlayerDyingSound.Play();
                 // IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
                 gameStateHandler.ChangeState(new GameOverState(gameStateHandler, font, score.GetScore(),false));
 

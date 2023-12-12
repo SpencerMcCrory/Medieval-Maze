@@ -60,5 +60,18 @@ namespace FinalProjectGameProgramming.Entities
                     height - 30);
             }
         }
+
+        public Rectangle SFXHitbox
+        {
+            get
+            {
+                // This could be the full size of the player or a different calculation
+                return new Rectangle(
+                    (int)Position.X ,
+                    (int)Position.Y ,
+                    width + 2 * 200,
+                    height + 60 * 2);
+            }
+        }
     }
 }

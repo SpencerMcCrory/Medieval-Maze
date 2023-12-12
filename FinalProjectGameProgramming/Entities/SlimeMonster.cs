@@ -58,6 +58,7 @@ namespace FinalProjectGameProgramming.Entities
                 IsFacingRight = Direction == new Vector2(1, 0) ? true : false;
                 // When change direction randomly. there is a chance that the monster will get stuck in a wall because of the HitboxSideOffset
                 // Direction = ChangeDirectionRandomly();
+                
             }
         }
 

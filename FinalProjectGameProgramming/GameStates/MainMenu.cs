@@ -42,7 +42,7 @@ namespace FinalProjectGameProgramming.GameStates
         private bool wasClicked;
         private MouseState previousMouseState;
         Song backgroundMusic;
-        private int buttonGap = 80;
+        private const int BUTTON_GAP = 80;
 
         public MainMenu(GameStateHandler gameStateHandler, SpriteFont font)
         {
@@ -67,23 +67,23 @@ namespace FinalProjectGameProgramming.GameStates
             playButton.SetSize(new Vector2(300, 80));
             // Create the load save button
             loadSaveButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Load Game");
-            loadSaveButton.SetPosition(new Vector2(centerX, playButton.GetPosition().Y + buttonGap)); // Set position for Leaderboard button
+            loadSaveButton.SetPosition(new Vector2(centerX, playButton.GetPosition().Y + BUTTON_GAP)); // Set position for Leaderboard button
             loadSaveButton.SetSize(new Vector2(300, 80));
             // Create the leaderboard button
             leaderBoardButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Leaderboard");
-            leaderBoardButton.SetPosition(new Vector2(centerX, loadSaveButton.GetPosition().Y + buttonGap)); // Set position for Leaderboard button
+            leaderBoardButton.SetPosition(new Vector2(centerX, loadSaveButton.GetPosition().Y + BUTTON_GAP)); // Set position for Leaderboard button
             leaderBoardButton.SetSize(new Vector2(300, 80));
             // create the help button
             helpButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Help");
-            helpButton.SetPosition(new Vector2(centerX, leaderBoardButton.GetPosition().Y + buttonGap)); // Set position for Help button
+            helpButton.SetPosition(new Vector2(centerX, leaderBoardButton.GetPosition().Y + BUTTON_GAP)); // Set position for Help button
             helpButton.SetSize(new Vector2(150, 80));
             // Create the about button
             aboutButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "About");
-            aboutButton.SetPosition(new Vector2(centerX+150, leaderBoardButton.GetPosition().Y + buttonGap)); // Set position for About button
+            aboutButton.SetPosition(new Vector2(centerX+150, leaderBoardButton.GetPosition().Y + BUTTON_GAP)); // Set position for About button
             aboutButton.SetSize(new Vector2(150, 80));
             // Create the exit button
             exitButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Exit");
-            exitButton.SetPosition(new Vector2(centerX, aboutButton.GetPosition().Y + buttonGap)); // Set position for Exit button
+            exitButton.SetPosition(new Vector2(centerX, aboutButton.GetPosition().Y + BUTTON_GAP)); // Set position for Exit button
             exitButton.SetSize(new Vector2(300, 80));
             // Add the buttons to the array
             buttons = new CustomButton[] { playButton, loadSaveButton, leaderBoardButton, helpButton, aboutButton, exitButton };

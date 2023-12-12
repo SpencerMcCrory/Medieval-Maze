@@ -19,17 +19,23 @@ namespace FinalProjectGameProgramming.GameStates
         private SpriteFont font;
         private string message;
         private IGameState nextState;
-        private GraphicsDeviceManager graphics;
+        private GraphicsDeviceManager graphicsDeviceManager;
         private int currentLevelNumber;
         private Texture2D buttonReleasedTexture;
         private Texture2D buttonPressedTexture;
         private CustomButton saveButton;
+        private CustomButton mainMenuButton;
+        private CustomButton continueButton;
         private ContentManager content;
         private GraphicsDevice graphicsDevice;
         private int score;
 
         private MouseState mState;
         private CustomButton closedButton;
+        private Texture2D backgroundImage;
+        private const int BUTTON_GAP = 80;
+        CustomButton[] buttons;
+
 
 
         public LevelTransitionState(GameStateHandler gameStateHandler, SpriteFont font, string message, IGameState nextState, int currentLevelNumber, int score)
@@ -39,12 +45,12 @@ namespace FinalProjectGameProgramming.GameStates
             this.font = font;
             this.message = message;
             this.nextState = nextState;
-            graphics = gameStateHandler.GraphicsDeviceManager;
+            graphicsDeviceManager = gameStateHandler.GraphicsDeviceManager;
             graphicsDevice = gameStateHandler.GraphicsDevice;
             this.currentLevelNumber = currentLevelNumber;
-            //
-            int screenWidth = graphics.PreferredBackBufferWidth;
-            int screenHeight = graphics.PreferredBackBufferHeight;
+            backgroundImage = content.Load<Texture2D>("TransitionBG");
+            int screenWidth = graphicsDeviceManager.PreferredBackBufferWidth;
+            int screenHeight = graphicsDeviceManager.PreferredBackBufferHeight;
             float centerX = screenWidth / 2;
             float centerY = screenHeight / 2;
             //
@@ -53,22 +59,21 @@ namespace FinalProjectGameProgramming.GameStates
             buttonPressedTexture = content.Load<Texture2D>("Button_Release_01a1");
             // Get the center position of the screen for the button
 
-
-
-
-            // Adjust the position of the closedButton
-            // Assuming you want this button to be in the top right, adjust as needed
-
-
-            Texture2D buttonReleasedTexture2 = content.Load<Texture2D>("Button_Release_01a2");
-            Texture2D buttonPressedTexture2 = content.Load<Texture2D>("Button_Release_01a1");
-
-
             // Create the save button
-            saveButton = new CustomButton(buttonReleasedTexture2, buttonPressedTexture2, gameStateHandler.GraphicsDevice, font, "Save");
+            saveButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, gameStateHandler.GraphicsDevice, font, "Save");
+            saveButton.SetSize(new Vector2(350, 100));
             Vector2 saveButtonSize = saveButton.GetSize();
             //// Position the save button
-            saveButton.SetPosition(new Vector2(screenWidth / 2 - saveButtonSize.X / 2, screenHeight / 2 - saveButtonSize.Y +500 / 2));
+            saveButton.SetPosition(new Vector2(screenWidth / 2 - saveButtonSize.X , screenHeight / 2 - saveButtonSize.Y +600 / 2));
+            
+            mainMenuButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, gameStateHandler.GraphicsDevice, font, "Return to Main Menu");
+            mainMenuButton.SetPosition(new Vector2(screenWidth / 2 - saveButtonSize.X +350, screenHeight / 2 - saveButtonSize.Y + 600 / 2));
+            mainMenuButton.SetSize(new Vector2(350, 100));
+            continueButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, gameStateHandler.GraphicsDevice, font, $"Continue to Level {currentLevelNumber}");
+            continueButton.SetPosition(new Vector2(screenWidth / 2 - saveButtonSize.X , screenHeight / 2 - saveButtonSize.Y + 200 / 2));
+            continueButton.SetSize(new Vector2(700, 100));
+
+            buttons = new CustomButton[] {  continueButton, saveButton, mainMenuButton};
 
 
 
@@ -84,7 +89,9 @@ namespace FinalProjectGameProgramming.GameStates
         public void Update(GameTime gameTime)
         {
             mState = Mouse.GetState();
-            saveButton.Update(mState);
+            foreach(CustomButton button in buttons) {
+                button.Update(mState);
+            }
             if (Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
                 gameStateHandler.ChangeState(nextState);
@@ -100,19 +107,33 @@ namespace FinalProjectGameProgramming.GameStates
                 }
                 
             }
+            if(continueButton.isClicked)
+            {
+                gameStateHandler.ChangeState(nextState);
+            }
+            if (mainMenuButton.isClicked)
+            {
+                MainMenu mainMenu = new MainMenu(gameStateHandler, font);
+                gameStateHandler.ChangeState(mainMenu);
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
+            spriteBatch.Draw(backgroundImage, new Rectangle(0, 0, graphicsDeviceManager.PreferredBackBufferWidth, graphicsDeviceManager.PreferredBackBufferHeight), Color.White); ;
             // Draw the save button
-            saveButton.Draw(spriteBatch);
+            foreach(CustomButton button in buttons)
+            {
+                button.Draw(spriteBatch);
+            }
+
             // convert the message into a vector to get the size of the text
             Vector2 textSize = font.MeasureString(message);
             // calculate the position of the text to center it on the screen
             Vector2 textPosition = new Vector2(
-                (graphics.PreferredBackBufferWidth - textSize.X) / 2,
-                (graphics.PreferredBackBufferHeight - textSize.Y) / 2
+                (graphicsDeviceManager.PreferredBackBufferWidth - textSize.X) / 2,
+                (graphicsDeviceManager.PreferredBackBufferHeight - textSize.Y) / 4
             );
             spriteBatch.DrawString(font, message, textPosition, Color.White);
 

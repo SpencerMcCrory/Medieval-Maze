@@ -252,6 +252,23 @@ namespace FinalProjectGameProgramming
 				{
 					gameOver = true;
 				}
+				if (player.SFXHitbox.Intersects(monsterHitbox))
+				{
+					monster.InitializeSFXTimer(elapsedTime.TotalSeconds);
+					monster.PlaySound(elapsedTime.TotalSeconds);
+					if (monster.CanPlaySound)
+					{
+						if(monster.Name == "Slime")
+						{
+                            SFXHandler.SlimeNoise.Play();
+                        }
+						if(monster.Name == "Big Zombie")
+						{
+							SFXHandler.BigZombieNoise.Play();
+						}
+						
+					}
+				}
 			}
 			movementDelta = (float)gameTime.ElapsedGameTime.TotalSeconds * player.Speed;
 
@@ -325,6 +342,7 @@ namespace FinalProjectGameProgramming
 						// Call a method on the power-up to handle the player collecting it
 						powerUp.Collect(player);
 					powerUp.SetDurationTimer(elapsedTime.TotalSeconds);
+					SFXHandler.SpeedPotion.Play();
                         
 
                     // Optionally play a sound effect or animation to indicate collection
@@ -461,14 +479,14 @@ namespace FinalProjectGameProgramming
 			{
 				int totalTime = (int)elapsedTime.TotalSeconds;
 				score.CalculateTimeScore(totalTime);
-				string transitionMessage = "Congratulations, you beat level 1!\nYour score is " + score.GetScore() + "\nPress ENTER to start Level 2.";
+				string transitionMessage = "Congratulations, you beat level 1!\n\nYour score is " + score.GetScore() + "\n\nPress ENTER to start Level 2.";
 				IGameState nextState = new PlayingState(gameStateHandler, 2, score.CurrentScore);
 				gameStateHandler.ChangeState(new LevelTransitionState(this.gameStateHandler, font, transitionMessage, nextState,2,score.GetScore()));
 			}
 			if (gameOver)
 			{
 
-
+				SFXHandler.PlayerDyingSound.Play();
 				gameStateHandler.ChangeState(new GameOverState(gameStateHandler, font, score.GetScore(),false));
 			}
 			spriteBatch.End();

@@ -41,7 +41,7 @@ namespace FinalProjectGameProgramming.GameStates
             save.DeleteSave();
             if (didTheyWin)
             {
-
+                gameOverBG = content.Load<Texture2D>("YouWonBG");
             }
             else
             {
