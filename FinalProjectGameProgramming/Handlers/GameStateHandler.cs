@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace FinalProjectGameProgramming.Handlers
 {
+/*game state handler handles swithcing between states. ie from main menu to playing*/
     internal class GameStateHandler
     {
         private IGameState currentState;
@@ -29,9 +30,6 @@ namespace FinalProjectGameProgramming.Handlers
             MainMenu mainMenu = new MainMenu(this, menuFont);
             BackgroundImageState backgroundImageState = new BackgroundImageState(mainMenu, this);
             ChangeState(backgroundImageState);
-
-            // Delay for 2 seconds
-            // System.Threading.Thread.Sleep(2000);
         }
 
         public void ChangeState(IGameState newState)
@@ -40,8 +38,6 @@ namespace FinalProjectGameProgramming.Handlers
             currentState = newState;
             currentState.Enter();
         }
-
-       
 
         public void Update(GameTime gameTime)
         {

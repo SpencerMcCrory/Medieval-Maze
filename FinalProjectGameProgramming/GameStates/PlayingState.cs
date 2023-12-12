@@ -38,13 +38,15 @@ namespace FinalProjectGameProgramming.GameStates
             switch (levelNumber)
             {
                 case 1:
-                    currentLevel = new Level1(graphicsDeviceManager, content, graphicsDevice, gameStateHandler);
+                    MediaPlayer.Play(MusicHandler.Level1Music);
+                    currentLevel = new Level1(gameStateHandler);
 
                     break;
                 case 2:
                     //currentLevel.UnloadContent();
-                    currentLevel = new Level2(graphicsDeviceManager, content, graphicsDevice, gameStateHandler, score);
-                    buttonPressedLevel = new Level2(graphicsDeviceManager, content, graphicsDevice, gameStateHandler, score);
+                    MediaPlayer.Play(MusicHandler.Level2Music);
+                    currentLevel = new Level2(gameStateHandler, score);
+                    buttonPressedLevel = new Level2(gameStateHandler, score);
 
                     break;
                 default:
@@ -59,8 +61,7 @@ namespace FinalProjectGameProgramming.GameStates
         {
             currentLevel.Initialize();
             currentLevel.LoadLevelContent();
-            MediaPlayer.Play(MusicHandler.Level1Music);
-            MediaPlayer.IsRepeating = true;
+           MediaPlayer.IsRepeating = true;
             MediaPlayer.Volume = 0.2f;
         }
 

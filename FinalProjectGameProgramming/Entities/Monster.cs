@@ -5,6 +5,7 @@ using System;
 
 namespace FinalProjectGameProgramming.Entities
 {
+/*Abstract Monster class that is used to update generic monster abilities and characteristics like direction, movement*/
     abstract class Monster
     {
         public string Name { get; set; }

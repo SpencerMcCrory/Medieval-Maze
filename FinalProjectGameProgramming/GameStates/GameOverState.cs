@@ -50,9 +50,11 @@ namespace FinalProjectGameProgramming.GameStates
             
         }
 
-        public void Enter() { }
+        public void Enter() {/*not needed*/ }
 
-        public void Exit() { }
+        public void Exit() {
+            GC.Collect();
+        }
 
         public void Update(GameTime gameTime)
         {

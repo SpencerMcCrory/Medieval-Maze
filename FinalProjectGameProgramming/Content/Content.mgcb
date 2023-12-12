@@ -199,6 +199,12 @@
 /processorParam:TextureFormat=Color
 /build:compositeBGLevel2.png
 
+#begin Density-Time-MAZE.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Density-Time-MAZE.mp3
+
 #begin Door_Closed.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -265,6 +271,18 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:guy_screaming.wav
+
+#begin HelpBG.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:HelpBG.png
 
 #begin helpFont.spritefont
 /importer:FontDescriptionImporter
@@ -537,18 +555,6 @@
 /processorParam:TextureFormat=Color
 /build:opened_door.png
 
-#begin opened_door.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:opened_door.png
-
 #begin relic_open_sfx.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -698,18 +704,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:UDLR.png
-
-#begin unopened_door.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:unopened_door.png
 
 #begin unopened_door.png
 /importer:TextureImporter
