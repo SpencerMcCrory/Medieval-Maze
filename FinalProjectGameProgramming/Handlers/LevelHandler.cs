@@ -19,6 +19,7 @@ namespace FinalProjectGameProgramming.Handlers
         public List<int[]> RelicSpawnPoints { get; private set; }
 
         public List<int[]> SpikeLocations { get; private set; }
+        public List<int[]> PowerUpLocations { get; private set; }
 
         //in the int grid - here is what the values mean:
         //0 = floor
@@ -51,6 +52,7 @@ namespace FinalProjectGameProgramming.Handlers
             MonsterSpawnPoints = new List<int[]>();
             RelicSpawnPoints = new List<int[]>();
             SpikeLocations = new List<int[]>();
+            PowerUpLocations = new List<int[]>();
 
             for (int i = 0; i < rows.Count; i++)
             {
@@ -71,6 +73,9 @@ namespace FinalProjectGameProgramming.Handlers
                             break;
                         case 5: // Player Spawn Point
                             StartPoint = new int[] { j, i };
+                            break;
+                        case 8:
+                            PowerUpLocations.Add(new int[] { j, i });
                             break;
                         case 9: // Spikes
                             SpikeLocations.Add(new int[] { j, i });

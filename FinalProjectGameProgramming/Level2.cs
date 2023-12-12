@@ -34,10 +34,11 @@ namespace FinalProjectGameProgramming
 		Texture2D[] slimeRunFrames;
 		Rectangle monsterHitbox;
 		List<Relic> relics = new List<Relic>();
-
 		List<Monster> monsters = new List<Monster>();
+        List<PowerUp> powerUps = new List<PowerUp>();
+        PowerUp removedPowerUp = null;
 
-		int timingDelay = 0;
+        int timingDelay = 0;
 
 		private Texture2D[] playerAnimationFrames;
 		const int playerFrameCount = 4;
@@ -150,11 +151,13 @@ namespace FinalProjectGameProgramming
 				relicFrames[i] = _content.Load<Texture2D>($"chest_full_open_anim_f{i}");
 			}
 
+            
 
-			// Load textures
-			backgroundTexture = _content.Load<Texture2D>("compositeBGLevel2");
+            // Load textures
+            backgroundTexture = _content.Load<Texture2D>("compositeBGLevel2");
+            Texture2D speedPowerUpTexture = _content.Load<Texture2D>("flask_blue_powerup");
 
-			door = _content.Load<Texture2D>("Level2_Door_Closed");
+            door = _content.Load<Texture2D>("Level2_Door_Closed");
 			button = _content.Load<Texture2D>("L2_Button_not_pressed");
 			greenSpikes = _content.Load<Texture2D>("Spikes_green");
 			purpleSpikes = _content.Load<Texture2D>("Spikes_purple");
@@ -192,7 +195,14 @@ namespace FinalProjectGameProgramming
 
 			}
 
-			buttonClickSE = _content.Load<SoundEffect>("futuristic_button_click");
+            foreach (int[] spawnPoint in currentLevel.PowerUpLocations)
+            {
+                Vector2 position = new Vector2(spawnPoint[0] * tileSize, spawnPoint[1] * tileSize);
+                powerUps.Add(new SpeedPowerUp(position, speedPowerUpTexture, "speed"));
+
+            }
+
+            buttonClickSE = _content.Load<SoundEffect>("futuristic_button_click");
 			font = _content.Load<SpriteFont>("galleryFont");
 
 		}
@@ -234,12 +244,29 @@ namespace FinalProjectGameProgramming
 				{
 					// Handle monster collision with the environment
 				}
-				if (playerHitbox.Intersects(monsterHitbox))
+				if (player.SFXHitbox.Intersects(monsterHitbox))
+				{
+					monster.InitializeSFXTimer(elapsedTime.TotalSeconds);
+					monster.PlaySound(elapsedTime.TotalSeconds);
+					if (monster.CanPlaySound)
+					{
+						if (monster.Name == "Slime")
+						{
+							SFXHandler.SlimeNoise.Play();
+						}
+						if (monster.Name == "Big Zombie")
+						{
+							SFXHandler.BigZombieNoise.Play();
+						}
+
+					}
+				}
+                    if (playerHitbox.Intersects(monsterHitbox))
 				{
 					gameOver = true;
 				}
 			}
-			movementDelta = (float)gameTime.ElapsedGameTime.TotalSeconds * player.speed;
+			movementDelta = (float)gameTime.ElapsedGameTime.TotalSeconds * player.Speed;
 
 			animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
 			if (animationTimer > timePerFrame)
@@ -297,9 +324,44 @@ namespace FinalProjectGameProgramming
 				// Apply movement
 				player.Position = newPlayerPosition;
 			}
+            foreach (PowerUp powerUp in powerUps)
+            {
+                if (!powerUp.IsDeleted && player.MonsterHitbox.Intersects(powerUp.Hitbox))
+                {
+                    powerUp.IsDeleted = true;
 
-			//update relic
-			foreach (Relic relic in relics)
+                    // Call a method on the power-up to handle the player collecting it
+                    powerUp.Collect(player);
+                    powerUp.SetDurationTimer(elapsedTime.TotalSeconds);
+                    SFXHandler.SpeedPotion.Play();
+
+
+                    // Optionally play a sound effect or animation to indicate collection
+                    // SFXHandler.PowerUpCollectedSound.Play();
+                    break;
+                }
+                powerUp.Update(gameTime);
+                if (powerUp.IsDeleted == true)
+                {
+                    if (powerUp.IsActive == false)
+                    {
+                        if (powerUp.Type == "speed")
+                        {
+                            player.Speed = 300;
+                            removedPowerUp = powerUp;
+
+                        }
+                    }
+                }
+            }
+            //remove powerup from list
+            if (removedPowerUp != null)
+            {
+                RemovePowerUp(removedPowerUp);
+                removedPowerUp = null;
+            }
+            //update relic
+            foreach (Relic relic in relics)
 			{
 				relic.Update(gameTime);
 			}
@@ -346,7 +408,7 @@ namespace FinalProjectGameProgramming
 			// spriteBatch.Draw(
 			// 	currentAnimation.Frames[currentFrame], player.Position, Color.White);
 
-			foreach (Monster monster in monsters)
+            foreach (Monster monster in monsters)
 			{
 				//debugging hitbox
 				if (monster.Name == "Big Zombie")
@@ -379,8 +441,16 @@ namespace FinalProjectGameProgramming
 				relic.Draw(spriteBatch);
 			}
 
-			//for Debugging hitbox Draw the semi - transparent hitbox
-			Color hitboxColorEnvironment = new Color(Color.Red, 0.5f); // Semi-transparent red
+            foreach (PowerUp powerUp in powerUps)
+            {
+                if (!powerUp.IsDeleted)
+                {
+                    spriteBatch.Draw(powerUp.Texture, powerUp.Position, Color.White);
+                }
+            }
+
+            //for Debugging hitbox Draw the semi - transparent hitbox
+            Color hitboxColorEnvironment = new Color(Color.Red, 0.5f); // Semi-transparent red
 			spriteBatch.Draw(pixel, player.EnvironmentHitbox, hitboxColorEnvironment);
 			Color hitboxColorMonster = new Color(Color.Red, 0.5f); // Semi-transparent red
 			spriteBatch.Draw(pixel, player.MonsterHitbox, hitboxColorMonster);
@@ -403,21 +473,28 @@ namespace FinalProjectGameProgramming
 
 			if (levelComplete)
 			{
-				string transitionMessage = "Congratulations,you beat the game!\nYour score was " + score.GetScore();
-				// IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
-				gameStateHandler.ChangeState(new GameOverState(_graphics, gameStateHandler, _content, _graphicsDevice, font, transitionMessage, score.GetScore()));
-			}
+                // IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
+                gameStateHandler.ChangeState(new GameOverState( gameStateHandler, font, score.GetScore(),true));
+            }
 			if (gameOver)
 			{
-				string transitionMessage = "Game Over!\nYour score is " + score.GetScore();
-				// IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
-				gameStateHandler.ChangeState(new GameOverState(_graphics, gameStateHandler, _content, _graphicsDevice, font, transitionMessage, score.GetScore()));
+                SFXHandler.PlayerDyingSound.Play();
+                // IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
+                gameStateHandler.ChangeState(new GameOverState(gameStateHandler, font, score.GetScore(),false));
 
 			}
 			spriteBatch.End();
 		}
 
-		private string CheckForCollision(Vector2 position)
+        private void RemovePowerUp(PowerUp powerUp)
+        {
+            if (powerUp != null)
+            {
+                powerUps.Remove(powerUp);
+            }
+        }
+
+        private string CheckForCollision(Vector2 position)
 		{
 			Rectangle playerHitbox = new Rectangle(
 				(int)position.X + player.hitboxSideOffset,
@@ -490,31 +567,39 @@ namespace FinalProjectGameProgramming
 					}
 					//sound is off by about 8 miliseconds
 					timingDelay++;
-					if (timingDelay > 8)
+					if (timingDelay == 8)
 					{
 						door = _content.Load<Texture2D>("Level2_Door_Open");
 						button = _content.Load<Texture2D>("L2_Button_pressed");
 						greenSpikes = _content.Load<Texture2D>("Spikes_green_button_pressed");
 						purpleSpikes = _content.Load<Texture2D>("Spikes_purple_button_clicked");
-					}
+
+                        string csvFileRelativePath = "Level2_IntGrid_Switch_Clicked.csv";
+                        string csvFilePath = Path.Combine(rootContentDirectory, csvFileRelativePath);
+                        if (File.Exists(csvFilePath))
+                        {
+                            currentLevel = new LevelHandler(csvFilePath);
+                        }
+                        else
+                        {
+                            throw new FileNotFoundException("Unable to load walls.csv. File not found.");
+                        }
+                        UnloadContent();
+                    }
 					//string csvFilePath = "C:\\PROG2370-23F\\Monogame\\FinalProjectGameProgramming\\FinalProjectGameProgramming\\Content\\Level2_IntGrid_Switch_Clicked.csv";
-					string csvFileRelativePath = "Level2_IntGrid_Switch_Clicked.csv";
-					string csvFilePath = Path.Combine(rootContentDirectory, csvFileRelativePath);
-					if (File.Exists(csvFilePath))
-					{
-						currentLevel = new LevelHandler(csvFilePath);
-					}
-					else
-					{
-						throw new FileNotFoundException("Unable to load walls.csv. File not found.");
-					}
-					return "button";
+					
+                    return "button";
 				}
 				if (currentLevel.Grid[gridY, gridX] == 6)
 				{
 					levelComplete = true;
 				}
-				if (currentLevel.Grid[gridY, gridX] == 9)
+                if (currentLevel.Grid[gridY, gridX] == 8)
+                {
+                    return "powerUp";
+
+                }
+                if (currentLevel.Grid[gridY, gridX] == 9)
 				{
 					Rectangle spikeHitbox = new Rectangle(
 						gridX * tileSize + SPIKE_HITBOX_OFFSET,
@@ -555,7 +640,7 @@ namespace FinalProjectGameProgramming
 
 		public override void UnloadContent()
 		{
-			throw new NotImplementedException();
+			GC.Collect();
 		}
 	}
 }

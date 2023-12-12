@@ -16,17 +16,19 @@ namespace FinalProjectGameProgramming.GameStates
     {
         private Level currentLevel;
         private Level buttonPressedLevel;
-        private GraphicsDeviceManager _graphics;
-        private ContentManager _content;
-        private GraphicsDevice _graphicsDevice;
-        private GameStateHandler _gameStateHandler;
+        private GraphicsDeviceManager graphicsDeviceManager;
+        private ContentManager content;
+        private GraphicsDevice graphicsDevice;
+        private GameStateHandler gameStateHandler;
 
-        public PlayingState(GraphicsDeviceManager graphics, ContentManager content, GraphicsDevice graphicsDevice, GameStateHandler gameStateHandler, int levelNumber, int score)
+        public PlayingState(GameStateHandler gameStateHandler, int levelNumber, int score)
         {
-            _graphics = graphics;
-            _content = content;
-            _graphicsDevice = graphicsDevice;
-            _gameStateHandler = gameStateHandler;
+            this.gameStateHandler = gameStateHandler;
+            graphicsDeviceManager = gameStateHandler.GraphicsDeviceManager;
+            graphicsDevice = gameStateHandler.GraphicsDevice;
+            content = gameStateHandler.Content;
+
+            
             InitializeLevel(levelNumber, score);
         }
 
@@ -36,13 +38,13 @@ namespace FinalProjectGameProgramming.GameStates
             switch (levelNumber)
             {
                 case 1:
-                    currentLevel = new Level1(_graphics, _content, _graphicsDevice, _gameStateHandler);
+                    currentLevel = new Level1(graphicsDeviceManager, content, graphicsDevice, gameStateHandler);
 
                     break;
                 case 2:
                     //currentLevel.UnloadContent();
-                    currentLevel = new Level2(_graphics, _content, _graphicsDevice, _gameStateHandler, score);
-                    buttonPressedLevel = new Level2(_graphics, _content, _graphicsDevice, _gameStateHandler, score);
+                    currentLevel = new Level2(graphicsDeviceManager, content, graphicsDevice, gameStateHandler, score);
+                    buttonPressedLevel = new Level2(graphicsDeviceManager, content, graphicsDevice, gameStateHandler, score);
 
                     break;
                 default:

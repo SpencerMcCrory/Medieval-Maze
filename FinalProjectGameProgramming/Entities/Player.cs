@@ -13,7 +13,7 @@ namespace FinalProjectGameProgramming.Entities
     {
         public Player()
         {
-            speed = 300f;
+            Speed = 300f;
             height = 56;
             width = 32;
             hitboxTopOffset = 40;
@@ -23,7 +23,7 @@ namespace FinalProjectGameProgramming.Entities
         }
         public bool IsFacingRight { get; set; } = true;
 
-        public float speed { get; private set; }
+        public float Speed { get; set; }
 
         private Vector2 position;
         public Vector2 Position
@@ -58,6 +58,19 @@ namespace FinalProjectGameProgramming.Entities
                     (int)Position.Y +27,
                     width - 2 * 10,
                     height - 30);
+            }
+        }
+
+        public Rectangle SFXHitbox
+        {
+            get
+            {
+                // This could be the full size of the player or a different calculation
+                return new Rectangle(
+                    (int)Position.X ,
+                    (int)Position.Y ,
+                    width + 2 * 200,
+                    height + 60 * 2);
             }
         }
     }

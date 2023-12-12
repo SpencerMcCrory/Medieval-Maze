@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SharpDX.XAudio2;
 using System;
 
 namespace FinalProjectGameProgramming.Entities
@@ -14,6 +15,9 @@ namespace FinalProjectGameProgramming.Entities
         public Vector2 Direction { get; protected set; }
         public Rectangle Hitbox { get; set; }
 
+        public bool CanPlaySound { get; set; } = true;
+        public double SFXStartTime { get; set; }
+
         public bool IsFacingRight { get; set; } = true;
         protected Monster(Texture2D texture, Vector2 position, float initialSpeed, Vector2 initialDirection)
         {
@@ -21,6 +25,7 @@ namespace FinalProjectGameProgramming.Entities
             Position = position;
             Speed = initialSpeed; // Set initial speed
             Direction = initialDirection; // Set initial direction
+            CanPlaySound = true;
         }
 
         public virtual void Update(GameTime gameTime)
@@ -49,9 +54,9 @@ namespace FinalProjectGameProgramming.Entities
             switch (randomDirection)
             {
                 case 0:
-                    return new Vector2(1, 0); // Right
+                    return new Vector2(0, -1); // Right
                 case 1:
-                    return new Vector2(-1, 0); // Left
+                    return new Vector2(0, 1); // Left
                 case 2:
                     return new Vector2(0, 1); // Down
                 case 3:
@@ -65,6 +70,28 @@ namespace FinalProjectGameProgramming.Entities
         {
             spriteBatch.Draw(Texture, Position, Color.White);
         }
+
+        public void InitializeSFXTimer(double time)
+        {
+            if (CanPlaySound)
+            {
+                CanPlaySound = false;
+                SFXStartTime = time;
+            }
+        }
+
+        public void PlaySound(double elapsedTime)
+        {
+            if (elapsedTime > SFXStartTime + 5)
+            {
+                CanPlaySound = true;
+            }
+            else
+            {
+                CanPlaySound = false;
+            }
+        }
+
     }
     
 }

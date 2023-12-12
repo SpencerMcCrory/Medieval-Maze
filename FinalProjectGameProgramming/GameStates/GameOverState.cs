@@ -13,7 +13,7 @@ namespace FinalProjectGameProgramming.GameStates
 {
     internal class GameOverState : IGameState
     {
-        private GraphicsDeviceManager graphics;
+        private GraphicsDeviceManager graphicsDeviceManager;
         private GameStateHandler gameStateHandler;
         private ContentManager content;
         private GraphicsDevice graphicsDevice;
@@ -27,16 +27,27 @@ namespace FinalProjectGameProgramming.GameStates
         private StringBuilder userInput = new StringBuilder("");
         private bool isEnteringName = true;
         private Dictionary<string, float> playerScore;
+        private Texture2D gameOverBG;
 
-        public GameOverState(GraphicsDeviceManager graphics, GameStateHandler gameStateHandler, ContentManager content, GraphicsDevice graphicsDevice, SpriteFont font, string message, float score)
+        public GameOverState(GameStateHandler gameStateHandler, SpriteFont font, float score, bool didTheyWin)
         {
-            this.graphics = graphics;
             this.gameStateHandler = gameStateHandler;
-            this.content = content;
-            this.graphicsDevice = graphicsDevice;
+            graphicsDeviceManager = gameStateHandler.GraphicsDeviceManager;
+            this.content = gameStateHandler.Content;
+            this.graphicsDevice = gameStateHandler.GraphicsDevice;
             this.font = font;
-            this.message = message;
             this.score = score;
+            SaveHandler save = new SaveHandler();
+            save.DeleteSave();
+            if (didTheyWin)
+            {
+                gameOverBG = content.Load<Texture2D>("YouWonBG");
+            }
+            else
+            {
+                gameOverBG = content.Load<Texture2D>("GameOverBG");
+            }
+            
         }
 
         public void Enter() { }
@@ -76,7 +87,7 @@ namespace FinalProjectGameProgramming.GameStates
                         };
                         // Change to next state
 
-                        nextState = new LeaderBoardState(graphics, content, gameStateHandler, graphicsDevice, font, playerScore);
+                        nextState = new LeaderBoardState( gameStateHandler, font, playerScore);
                         gameStateHandler.ChangeState(nextState);
                         // Toggle name entry mode
                         isEnteringName = !isEnteringName;
@@ -146,22 +157,34 @@ namespace FinalProjectGameProgramming.GameStates
         {
             // TODO: Add a background image
             spriteBatch.Begin();
+            spriteBatch.Draw(gameOverBG, new Rectangle(0, 0, graphicsDeviceManager.PreferredBackBufferWidth, graphicsDeviceManager.PreferredBackBufferHeight), Color.White);
             // convert the message into a vector to get the size of the text
-            Vector2 textSize = font.MeasureString(message);
+            Vector2 textSize = font.MeasureString(score.ToString());
             // calculate the position of the text
             Vector2 textPosition = new Vector2(
-                (graphics.PreferredBackBufferWidth - textSize.X) / 4,
-                (graphics.PreferredBackBufferHeight - textSize.Y) / 4
+                (graphicsDeviceManager.PreferredBackBufferWidth - textSize.X) / 2,
+                (graphicsDeviceManager.PreferredBackBufferHeight - textSize.Y) -325
             );
-            spriteBatch.DrawString(font, message, textPosition, Color.White);
+            spriteBatch.DrawString(font, score.ToString(), textPosition, Color.White);
 
             // Add user input
-            Vector2 userInputPos = new Vector2(textPosition.X, textPosition.Y + textSize.Y + 20);
-            spriteBatch.DrawString(font, "Enter your name then press ENTER to finish: ", userInputPos, Color.White);
+            string displayText = userInput.ToString();
+            Vector2 displayTextSize = font.MeasureString(displayText);
+            //Vector2 userInputPos = new Vector2(textPosition.X, textPosition.Y + textSize.Y + 120);
+            
+            Vector2 userInputPos = new Vector2(
+                (graphicsDeviceManager.PreferredBackBufferWidth - displayTextSize.X) / 2, // This will keep it centered
+                textPosition.Y + textSize.Y + 120 // Position Y below the score or wherever you'd like it
+            );
+
 
             // Draw user input or entered name
-            string displayText = userInput.ToString();
-            spriteBatch.DrawString(font, displayText, new Vector2(userInputPos.X, userInputPos.Y + 30), Color.White);
+            
+            spriteBatch.DrawString(font, displayText, userInputPos, Color.White);
+            string exitText = "Enter your name then press ENTER to Main Menu";
+            Vector2 exitTextSize = font.MeasureString(exitText);
+            spriteBatch.DrawString(font,exitText , new Vector2(graphicsDeviceManager.PreferredBackBufferWidth / 2 - (exitTextSize.X/2), 
+                                    userInputPos.Y +90), Color.White);
 
             spriteBatch.End();
         }

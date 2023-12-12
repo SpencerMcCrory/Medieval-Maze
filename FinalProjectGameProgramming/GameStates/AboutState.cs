@@ -12,11 +12,11 @@ namespace FinalProjectGameProgramming.GameStates
 {
     internal class AboutState : IGameState
     {
-        private GraphicsDeviceManager _graphics;
-        private GameStateHandler _gameStateHandler;
-        private SpriteFont _font;
-        private ContentManager _content;
-        private GraphicsDevice _graphicsDevice;
+        private GraphicsDeviceManager graphicsDeviceManager;
+        private GameStateHandler gameStateHandler;
+        private SpriteFont font;
+        private ContentManager content;
+        private GraphicsDevice graphicsDevice;
         private MouseState mState;
         private Texture2D aboutBG;
         private Texture2D knight;
@@ -25,16 +25,16 @@ namespace FinalProjectGameProgramming.GameStates
         private int screenWidth;
         private int screenHeight;
         
-        private Button closedButton;
+        private CustomButton closedButton;
 
 
-        public AboutState(GraphicsDeviceManager graphics, ContentManager content, GameStateHandler gameStateHandler, GraphicsDevice graphicsDevice, SpriteFont font)
+        public AboutState(GameStateHandler gameStateHandler,SpriteFont font)
         {
-            _graphics = graphics;
-            _content = content;
-            _gameStateHandler = gameStateHandler;
-            _font = font;
-            _graphicsDevice = graphicsDevice;
+            this.gameStateHandler = gameStateHandler;
+            graphicsDeviceManager = gameStateHandler.GraphicsDeviceManager;
+            content = gameStateHandler.Content;
+            this.font = font;
+            graphicsDevice = gameStateHandler.GraphicsDevice;
              screenWidth = graphicsDevice.Viewport.Width;
             screenHeight = graphicsDevice.Viewport.Height;
             
@@ -44,17 +44,17 @@ namespace FinalProjectGameProgramming.GameStates
             Texture2D buttonPressedTexture = content.Load<Texture2D>("Button_Release_01a1");
 
             // Create the close button
-            closedButton = new Button(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, _font, "X");
+            closedButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, font, "X");
             closedButton.SetPosition(new Vector2(100, 10)); // Set position for Close button
             closedButton.SetSize(new Vector2(50, 50)); // Set size for Close button
 
         }
 
         public void Enter() {
-            aboutBG = _content.Load<Texture2D>("LeaderBoardBG");
-            knight = _content.Load<Texture2D>("knight_f_idle_anim_f1");
-            bigZombie = _content.Load<Texture2D>("big_zombie_run_anim_f0");
-            slime = _content.Load<Texture2D>("swampy_anim_f0");
+            aboutBG = content.Load<Texture2D>("AboutBG");
+            knight = content.Load<Texture2D>("knight_f_idle_anim_f1");
+            bigZombie = content.Load<Texture2D>("big_zombie_run_anim_f0");
+            slime = content.Load<Texture2D>("swampy_anim_f0");
         }
 
         public void Exit() { }
@@ -65,7 +65,7 @@ namespace FinalProjectGameProgramming.GameStates
             closedButton.Update(mState);
             if (closedButton.isClicked)
             {
-                _gameStateHandler.ChangeState(new MainMenu(_gameStateHandler, _font, _graphics, _content, _graphicsDevice));
+                gameStateHandler.ChangeState(new MainMenu(gameStateHandler, font));
             }
         }
 
@@ -90,18 +90,18 @@ namespace FinalProjectGameProgramming.GameStates
 
             // Draw general information
             string information = $"\"Medieval Maze\" is a game developed by Group #4,";
-            spriteBatch.DrawString(_font, information, new Vector2(250, 150), Color.White);
-            spriteBatch.DrawString(_font, "including:", new Vector2(260, 190), Color.White);
+            spriteBatch.DrawString(font, information, new Vector2(250, 150), Color.White);
+            spriteBatch.DrawString(font, "including:", new Vector2(260, 190), Color.White);
 
             // Draw the knight and first developer
             // Set developer name and get size 
             string firstDeveloper = "Spencer McCrory";
-            Vector2 firstDeveloperSize = _font.MeasureString(firstDeveloper);
+            Vector2 firstDeveloperSize = font.MeasureString(firstDeveloper);
             // Calculate the center position of the first developer
             Vector2 firstDeveloperPosition = new Vector2(centerPosition.X - firstDeveloperSize.X / 2, centerPosition.Y + titleGap);
             // Draw the knights and first developer
             spriteBatch.Draw(knight, new Vector2(characterStartXPosition, firstDeveloperPosition.Y - characterYDifference), Color.White);
-            spriteBatch.DrawString(_font, firstDeveloper, firstDeveloperPosition, Color.White);
+            spriteBatch.DrawString(font, firstDeveloper, firstDeveloperPosition, Color.White);
             // Flip the knight
             spriteBatch.Draw(
                 texture: knight, // The texture to draw
@@ -118,12 +118,12 @@ namespace FinalProjectGameProgramming.GameStates
             // Draw the slime and second developer
             // Set developer name and get size
             string secondDeveloper = "David Florez";
-            Vector2 secondDeveloperSize = _font.MeasureString(secondDeveloper);
+            Vector2 secondDeveloperSize = font.MeasureString(secondDeveloper);
             // Calculate the center position of the second developer
             Vector2 secondDeveloperPosition = new Vector2(centerPosition.X - secondDeveloperSize.X / 2, firstDeveloperPosition.Y + nameGap);
             // Draw the slime and second developer
             spriteBatch.Draw(slime, new Vector2(characterStartXPosition, secondDeveloperPosition.Y - slimeYDifference), Color.White);
-            spriteBatch.DrawString(_font, secondDeveloper, secondDeveloperPosition, Color.White);
+            spriteBatch.DrawString(font, secondDeveloper, secondDeveloperPosition, Color.White);
             // Flip the slime
             spriteBatch.Draw(
                 texture: slime, // The texture to draw
@@ -140,12 +140,12 @@ namespace FinalProjectGameProgramming.GameStates
             // Draw the big zombie and third developer
             // Set developer name and get size
             string thirdDevlper = "Hoang Tuan Nguyen";
-            Vector2 thirdDeveloperSize = _font.MeasureString(thirdDevlper);
+            Vector2 thirdDeveloperSize = font.MeasureString(thirdDevlper);
             // Calculate the center position of the third developer
             Vector2 thirdDeveloperPosition = new Vector2(centerPosition.X - thirdDeveloperSize.X / 2, secondDeveloperPosition.Y + nameGap);
             // Draw the big zombie and third developer
             spriteBatch.Draw(bigZombie, new Vector2(bigZombieStartXPosition, thirdDeveloperPosition.Y - bigZombieYDifference), Color.White);
-            spriteBatch.DrawString(_font, thirdDevlper, thirdDeveloperPosition, Color.White);
+            spriteBatch.DrawString(font, thirdDevlper, thirdDeveloperPosition, Color.White);
             // Flip the big zombie
             spriteBatch.Draw(
                 texture: bigZombie, // The texture to draw

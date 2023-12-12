@@ -18,6 +18,7 @@ namespace FinalProjectGameProgramming.GameStates
         private Texture2D[] backgroundImages;
         ContentManager content;
         private GraphicsDevice graphicsDevice;
+        private GraphicsDeviceManager graphicsDeviceManager;
         private int screenWidth;
         private int screenHeight;
         IGameState nextState;
@@ -27,14 +28,16 @@ namespace FinalProjectGameProgramming.GameStates
         private int currentFrame;
         private double animationTimer;
 
-        public BackgroundImageState(ContentManager content, GraphicsDeviceManager graphicsDeviceManager, IGameState nextState, GameStateHandler gamestateHandler)
+        public BackgroundImageState(IGameState nextState, GameStateHandler gamestateHandler)
         {
-            this.content = content;
-            this.graphicsDevice = graphicsDeviceManager.GraphicsDevice;
+            this.gameStateHandler = gamestateHandler;
+            this.content = gameStateHandler.Content;
+            this.graphicsDevice = gamestateHandler.GraphicsDevice;
+            this.graphicsDeviceManager = gameStateHandler.GraphicsDeviceManager;
             this.screenWidth = graphicsDevice.Viewport.Width;
             this.screenHeight = graphicsDevice.Viewport.Height;
             this.nextState = nextState;
-            this.gameStateHandler = gamestateHandler;
+            
             this.timer = 0;
 
 

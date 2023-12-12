@@ -13,6 +13,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin aboutBG.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:aboutBG.png
+
 #begin Background.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -72,6 +84,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:big_zombie_run_anim_f3.png
+
+#begin bigZombieSnarl.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:bigZombieSnarl.wav
 
 #begin Button_not_pressed.png
 /importer:TextureImporter
@@ -193,6 +211,18 @@
 /processorParam:TextureFormat=Color
 /build:Door_Open.png
 
+#begin flask_blue_powerup.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:flask_blue_powerup.png
+
 #begin futuristic_button_click.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -205,6 +235,24 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:galleryFont.spritefont
+
+#begin GameOverBG.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:GameOverBG.png
+
+#begin guy_screaming.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:guy_screaming.wav
 
 #begin Joshua McLean - Mountain Trials-MainMenu.mp3
 /importer:Mp3Importer
@@ -374,6 +422,18 @@
 /processorParam:TextureFormat=Color
 /build:Level2_Door_Open.png
 
+#begin MainMenuBG.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MainMenuBG.png
+
 #begin MedievalMaze.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -439,6 +499,18 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:relic_open_sfx.wav
+
+#begin slimeSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:slimeSound.wav
+
+#begin speedPowerUp.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:speedPowerUp.wav
 
 #begin Spikes_green_button_pressed.png
 /importer:TextureImporter
@@ -536,6 +608,18 @@
 /processorParam:TextureFormat=Color
 /build:swampy_anim_f3.png
 
+#begin TransitionBG.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TransitionBG.png
+
 #begin Walls_BackGround.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -547,4 +631,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Walls_BackGround.png
+
+#begin YouWonBG.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:YouWonBG.png
 

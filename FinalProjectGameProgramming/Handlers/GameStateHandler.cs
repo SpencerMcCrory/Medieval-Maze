@@ -14,14 +14,20 @@ namespace FinalProjectGameProgramming.Handlers
     {
         private IGameState currentState;
         private IGameState[,] gameStates;
+        public ContentManager Content {  get; private set; }
+        public GraphicsDeviceManager GraphicsDeviceManager {  get; private set; }
+        public GraphicsDevice GraphicsDevice { get; private set; }
 
 
         public GameStateHandler(GraphicsDeviceManager graphics, ContentManager content, GraphicsDevice graphicsDevice)
         {
+            this.Content = content;
+            this.GraphicsDeviceManager = graphics;
+            this.GraphicsDevice = graphicsDevice;
             // Initialize the MainMenu as the starting state
             SpriteFont menuFont = content.Load<SpriteFont>("galleryFont"); // Load your font
-            MainMenu mainMenu = new MainMenu(this, menuFont, graphics, content, graphicsDevice);
-            BackgroundImageState backgroundImageState = new BackgroundImageState(content, graphics, mainMenu, this);
+            MainMenu mainMenu = new MainMenu(this, menuFont);
+            BackgroundImageState backgroundImageState = new BackgroundImageState(mainMenu, this);
             ChangeState(backgroundImageState);
 
             // Delay for 2 seconds

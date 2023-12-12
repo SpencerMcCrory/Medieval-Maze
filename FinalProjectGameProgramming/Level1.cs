@@ -41,6 +41,7 @@ namespace FinalProjectGameProgramming
 		private Rectangle monsterHitbox;
 		List<Monster> monsters = new List<Monster>();
 		List<Relic> relics = new List<Relic>();
+		List<PowerUp> powerUps = new List<PowerUp>();
 
 		int timingDelay = 0;
 
@@ -63,8 +64,9 @@ namespace FinalProjectGameProgramming
 		bool levelComplete;
 		bool gameOver;
 		bool buttonPressed;
+        PowerUp removedPowerUp = null;
 
-		Texture2D pixel;
+        Texture2D pixel;
 
 
 		SoundEffect buttonClickSE;
@@ -158,6 +160,8 @@ namespace FinalProjectGameProgramming
 				relicFrames[i] = _content.Load<Texture2D>($"chest_full_open_anim_f{i}");
 			}
 
+			Texture2D speedPowerUpTexture = _content.Load<Texture2D>("flask_blue_powerup");
+
 
 			// Load textures
 			backgroundTexture = _content.Load<Texture2D>("Background");
@@ -198,6 +202,13 @@ namespace FinalProjectGameProgramming
 				relics.Add(new Relic(position, relicFrames, 0.08));
 
 			}
+
+			foreach (int[] spawnPoint in currentLevel.PowerUpLocations)
+			{
+				Vector2 position = new Vector2(spawnPoint[0] * tileSize, spawnPoint[1] * tileSize);
+                powerUps.Add(new SpeedPowerUp(position, speedPowerUpTexture, "speed"));
+
+            }
 
 			buttonClickSE = _content.Load<SoundEffect>("futuristic_button_click");
 			font = _content.Load<SpriteFont>("galleryFont");
@@ -241,8 +252,25 @@ namespace FinalProjectGameProgramming
 				{
 					gameOver = true;
 				}
+				if (player.SFXHitbox.Intersects(monsterHitbox))
+				{
+					monster.InitializeSFXTimer(elapsedTime.TotalSeconds);
+					monster.PlaySound(elapsedTime.TotalSeconds);
+					if (monster.CanPlaySound)
+					{
+						if(monster.Name == "Slime")
+						{
+                            SFXHandler.SlimeNoise.Play();
+                        }
+						if(monster.Name == "Big Zombie")
+						{
+							SFXHandler.BigZombieNoise.Play();
+						}
+						
+					}
+				}
 			}
-			movementDelta = (float)gameTime.ElapsedGameTime.TotalSeconds * player.speed;
+			movementDelta = (float)gameTime.ElapsedGameTime.TotalSeconds * player.Speed;
 
 			animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
 			if (animationTimer > timePerFrame)
@@ -304,7 +332,44 @@ namespace FinalProjectGameProgramming
 				player.Position = newPlayerPosition;
 			}
 
-			foreach (Relic relic in relics)
+			
+            foreach (PowerUp powerUp in powerUps)
+            {
+                if (!powerUp.IsDeleted && player.MonsterHitbox.Intersects(powerUp.Hitbox))
+                {
+					powerUp.IsDeleted = true;
+
+						// Call a method on the power-up to handle the player collecting it
+						powerUp.Collect(player);
+					powerUp.SetDurationTimer(elapsedTime.TotalSeconds);
+					SFXHandler.SpeedPotion.Play();
+                        
+
+                    // Optionally play a sound effect or animation to indicate collection
+                    // SFXHandler.PowerUpCollectedSound.Play();
+                    break;
+                }
+				powerUp.Update(gameTime);
+				if(powerUp.IsDeleted == true)
+				{
+					if(powerUp.IsActive == false) { 
+						if(powerUp.Type == "speed")
+						{
+							player.Speed = 300;
+                            removedPowerUp = powerUp;
+
+                        }
+                    }
+                }
+            }
+			//remove powerup from list
+			if(removedPowerUp != null)
+			{
+				RemovePowerUp(removedPowerUp);
+				removedPowerUp = null;
+            }
+
+            foreach (Relic relic in relics)
 			{
 				relic.Update(gameTime);
 			}
@@ -381,6 +446,13 @@ namespace FinalProjectGameProgramming
 				relic.Draw(spriteBatch);
 			}
 
+			foreach(PowerUp powerUp in powerUps)
+			{
+				if (!powerUp.IsDeleted) { 
+				spriteBatch.Draw(powerUp.Texture, powerUp.Position, Color.White);
+                }
+            }
+
 
 
 			//for Debugging hitbox Draw the semi - transparent hitbox
@@ -407,19 +479,26 @@ namespace FinalProjectGameProgramming
 			{
 				int totalTime = (int)elapsedTime.TotalSeconds;
 				score.CalculateTimeScore(totalTime);
-				string transitionMessage = "Congratulations, you beat level 1!\nYour score is " + score.GetScore() + "\nPress ENTER to start Level 2.";
-				IGameState nextState = new PlayingState(_graphics, _content, _graphicsDevice, gameStateHandler, 2, score.CurrentScore);
-				gameStateHandler.ChangeState(new LevelTransitionState(_graphics, gameStateHandler, font, transitionMessage, nextState));
+				string transitionMessage = "Congratulations, you beat level 1!\n\nYour score is " + score.GetScore() + "\n\nPress ENTER to start Level 2.";
+				IGameState nextState = new PlayingState(gameStateHandler, 2, score.CurrentScore);
+				gameStateHandler.ChangeState(new LevelTransitionState(this.gameStateHandler, font, transitionMessage, nextState,2,score.GetScore()));
 			}
 			if (gameOver)
 			{
-				string transitionMessage = "Game Over!\nYour score is " + score.GetScore();
-				// IGameState nextState = new MainMenu(gameStateHandler, font, _graphics, _content, _graphicsDevice);
-				gameStateHandler.ChangeState(new GameOverState(_graphics, gameStateHandler, _content, _graphicsDevice, font, transitionMessage, score.GetScore()));
+
+				SFXHandler.PlayerDyingSound.Play();
+				gameStateHandler.ChangeState(new GameOverState(gameStateHandler, font, score.GetScore(),false));
 			}
 			spriteBatch.End();
 		}
 
+		private void RemovePowerUp(PowerUp powerUp)
+		{
+			if (powerUp != null)
+			{
+				powerUps.Remove(powerUp);
+			}
+		}
 		private string CheckForCollision(Vector2 newPosition)
 		{
 			Rectangle playerHitbox = new Rectangle(
@@ -481,9 +560,10 @@ namespace FinalProjectGameProgramming
 							//remove relic from list
 							relics.Remove(removedRelic);
 						}
-						return "relic";
-					}
-				}
+                        return "relic";
+                    }
+                    
+                }
 				else if (currentLevel.Grid[gridY, gridX] == 3)
 				{
 					if (!buttonPressed)
@@ -516,27 +596,34 @@ namespace FinalProjectGameProgramming
 				else if (currentLevel.Grid[gridY, gridX] == 6)
 				{
 					levelComplete = true;
+					return "complete";
 				}
-				else if (currentLevel.Grid[gridY, gridX] == 9)
+				else if (currentLevel.Grid[gridY, gridX] == 8)
 				{
-					Rectangle spikeHitbox = new Rectangle(
-						gridX * tileSize + SPIKE_HITBOX_OFFSET,
-						gridY * tileSize + SPIKE_HITBOX_OFFSET,
-						tileSize - 2 * SPIKE_HITBOX_OFFSET,
-						tileSize - 2 * SPIKE_HITBOX_OFFSET
-					);
-
-					// Check if the player's hitbox intersects with the spike hitbox
-					if (playerHitbox.Intersects(spikeHitbox))
-					{
-						// Handle collision with spike
-						gameOver = true;
-					}
-
+						return "powerUp";
+							
 				}
+                else if (currentLevel.Grid[gridY, gridX] == 9)
+                {
+                    Rectangle spikeHitbox = new Rectangle(
+                        gridX * tileSize + SPIKE_HITBOX_OFFSET,
+                        gridY * tileSize + SPIKE_HITBOX_OFFSET,
+                        tileSize - 2 * SPIKE_HITBOX_OFFSET,
+                        tileSize - 2 * SPIKE_HITBOX_OFFSET
+                    );
+
+                    // Check if the player's hitbox intersects with the spike hitbox
+                    if (playerHitbox.Intersects(spikeHitbox))
+                    {
+                        // Handle collision with spike
+                        gameOver = true;
+                    }
+
+                }
+                
 			}
-			return "nothing"; // No collision
-		}
+            return "nothing"; // No collision
+        }
 
 		public override void UnloadContent()
 		{
