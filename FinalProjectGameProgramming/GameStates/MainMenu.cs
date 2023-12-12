@@ -42,7 +42,7 @@ namespace FinalProjectGameProgramming.GameStates
         private bool wasClicked;
         private MouseState previousMouseState;
         Song backgroundMusic;
-        private int buttonGap = 120;
+        private int buttonGap = 80;
 
         public MainMenu(GameStateHandler gameStateHandler, SpriteFont font)
         {
@@ -54,33 +54,37 @@ namespace FinalProjectGameProgramming.GameStates
 
             Texture2D buttonReleasedTexture = content.Load<Texture2D>("Button_Release_01a2");
             Texture2D buttonPressedTexture = content.Load<Texture2D>("Button_Release_01a1");// Load your button texture
-            backgroundImage = content.Load<Texture2D>("MedievalMaze4");
+            backgroundImage = content.Load<Texture2D>("MainMenuBG");
 
             // Get the center position of the screen for the button
             CustomButton button = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "");
+            button.SetSize(new Vector2(300,80));
             float centerX = (graphicsDeviceManager.PreferredBackBufferWidth - button.GetSize().X) / 2;
 
             // Create the play button
             playButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Play");
-            playButton.SetPosition(new Vector2(centerX, 100)); // Set position for Play button
+            playButton.SetPosition(new Vector2(centerX, 375)); // Set position for Play button
+            playButton.SetSize(new Vector2(300, 80));
             // Create the load save button
             loadSaveButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Load Game");
             loadSaveButton.SetPosition(new Vector2(centerX, playButton.GetPosition().Y + buttonGap)); // Set position for Leaderboard button
+            loadSaveButton.SetSize(new Vector2(300, 80));
             // Create the leaderboard button
             leaderBoardButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Leaderboard");
             leaderBoardButton.SetPosition(new Vector2(centerX, loadSaveButton.GetPosition().Y + buttonGap)); // Set position for Leaderboard button
-
+            leaderBoardButton.SetSize(new Vector2(300, 80));
             // create the help button
             helpButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Help");
             helpButton.SetPosition(new Vector2(centerX, leaderBoardButton.GetPosition().Y + buttonGap)); // Set position for Help button
-
+            helpButton.SetSize(new Vector2(150, 80));
             // Create the about button
             aboutButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "About");
-            aboutButton.SetPosition(new Vector2(centerX, helpButton.GetPosition().Y + buttonGap)); // Set position for About button
-
+            aboutButton.SetPosition(new Vector2(centerX+150, leaderBoardButton.GetPosition().Y + buttonGap)); // Set position for About button
+            aboutButton.SetSize(new Vector2(150, 80));
             // Create the exit button
             exitButton = new CustomButton(buttonReleasedTexture, buttonPressedTexture, graphicsDevice, menuFont, "Exit");
             exitButton.SetPosition(new Vector2(centerX, aboutButton.GetPosition().Y + buttonGap)); // Set position for Exit button
+            exitButton.SetSize(new Vector2(300, 80));
             // Add the buttons to the array
             buttons = new CustomButton[] { playButton, loadSaveButton, leaderBoardButton, helpButton, aboutButton, exitButton };
         }
@@ -141,7 +145,7 @@ namespace FinalProjectGameProgramming.GameStates
                 string[] saveFile = save.LoadFile();
                 try { 
                     if (saveFile == null) {
-                    throw new ArgumentException("No save file found. If you died after your save, your file gets deleted.");
+                    throw new ArgumentException("No save file found. \nIf you died or won after your save, your file gets deleted.");
                     }
                     if (saveFile.Length != 2)
                     {

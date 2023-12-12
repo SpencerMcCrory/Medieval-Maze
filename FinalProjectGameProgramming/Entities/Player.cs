@@ -13,7 +13,7 @@ namespace FinalProjectGameProgramming.Entities
     {
         public Player()
         {
-            speed = 600f;
+            Speed = 300f;
             height = 56;
             width = 32;
             hitboxTopOffset = 40;
@@ -23,7 +23,7 @@ namespace FinalProjectGameProgramming.Entities
         }
         public bool IsFacingRight { get; set; } = true;
 
-        public float speed { get; private set; }
+        public float Speed { get; set; }
 
         private Vector2 position;
         public Vector2 Position

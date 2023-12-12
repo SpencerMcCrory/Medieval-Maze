@@ -51,7 +51,7 @@ namespace FinalProjectGameProgramming.GameStates
         }
 
         public void Enter() {
-            aboutBG = content.Load<Texture2D>("LeaderBoardBG");
+            aboutBG = content.Load<Texture2D>("AboutBG");
             knight = content.Load<Texture2D>("knight_f_idle_anim_f1");
             bigZombie = content.Load<Texture2D>("big_zombie_run_anim_f0");
             slime = content.Load<Texture2D>("swampy_anim_f0");
