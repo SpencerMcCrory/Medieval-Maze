@@ -244,7 +244,24 @@ namespace FinalProjectGameProgramming
 				{
 					// Handle monster collision with the environment
 				}
-				if (playerHitbox.Intersects(monsterHitbox))
+				if (player.SFXHitbox.Intersects(monsterHitbox))
+				{
+					monster.InitializeSFXTimer(elapsedTime.TotalSeconds);
+					monster.PlaySound(elapsedTime.TotalSeconds);
+					if (monster.CanPlaySound)
+					{
+						if (monster.Name == "Slime")
+						{
+							SFXHandler.SlimeNoise.Play();
+						}
+						if (monster.Name == "Big Zombie")
+						{
+							SFXHandler.BigZombieNoise.Play();
+						}
+
+					}
+				}
+                    if (playerHitbox.Intersects(monsterHitbox))
 				{
 					gameOver = true;
 				}

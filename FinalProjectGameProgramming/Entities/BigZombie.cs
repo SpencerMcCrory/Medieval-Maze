@@ -29,18 +29,7 @@ internal class BigZombie : Monster
         }
 
     }
-    public Rectangle EnvironmentHitbox
-    {
-        get
-        {
-            return new Rectangle(
-                        (int)Position.X ,
-                        (int)Position.Y,
-                        Texture.Width - 2 * 100,
-                        Texture.Height - 140);
-        }
 
-    }
     public BigZombie(Texture2D[] runFrames, Vector2 position, CollisionHandler collisionHandler, float speed, Vector2 direction)
         : base(runFrames[0], position, speed, direction) // Include speed and direction
     {
@@ -71,10 +60,10 @@ internal class BigZombie : Monster
 
     protected override void CheckForCollisionAndChangeDirection()
     {
-        Rectangle bounds = EnvironmentHitbox;
+        Rectangle bounds = GetHitBox();
         if (collisionHandler.CheckCollisionWithEnvironment(bounds))
         {
-            Direction = ChangeDirectionRandomly(); // Reverse direction
+            Direction = -Direction; // Reverse direction
             IsFacingRight = Direction == new Vector2(1,0)? true: false;
         }
     }

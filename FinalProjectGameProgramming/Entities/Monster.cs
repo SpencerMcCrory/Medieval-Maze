@@ -15,7 +15,6 @@ namespace FinalProjectGameProgramming.Entities
         public Vector2 Direction { get; protected set; }
         public Rectangle Hitbox { get; set; }
 
-        public Rectangle EnvironmentHitBox { get; set; }
         public bool CanPlaySound { get; set; } = true;
         public double SFXStartTime { get; set; }
 
