@@ -43,6 +43,8 @@ namespace FinalProjectGameProgramming.GameStates
         private Dictionary<string, float> _userScore = new Dictionary<string, float>(){
             {"User", 0}
         };
+
+        private bool isLoadedSavedFile = false;
         private CustomButton closedButton;
 
 
@@ -56,6 +58,8 @@ namespace FinalProjectGameProgramming.GameStates
             _userScore = userScore;
             screenWidth = graphicsDevice.Viewport.Width;
             screenHeight = graphicsDevice.Viewport.Height;
+
+            LoadLeaderBoardScoresFromSavedFile();
             AddUserScoreToLeaderBoard();
 
             // Load the button textures
@@ -69,6 +73,20 @@ namespace FinalProjectGameProgramming.GameStates
 
         }
 
+        private void LoadLeaderBoardScoresFromSavedFile()
+        {
+            // If the leaderboard scores are not loaded from the saved file
+            if (!isLoadedSavedFile)
+            {
+                SaveHandler saveHandler = new SaveHandler();
+                List<Dictionary<string, float>> loadedUserScore = saveHandler.LoadLeaderboardFile();
+                if (loadedUserScore != null && loadedUserScore.Count > 0)
+                {
+                    leaderBoardScores = loadedUserScore;
+                }
+            }
+        }
+
         private void AddUserScoreToLeaderBoard()
         {
             if (_userScore != null)
@@ -77,10 +95,29 @@ namespace FinalProjectGameProgramming.GameStates
                 leaderBoardScores.Add(_userScore);
                 // Sort the leaderboard
                 leaderBoardScores = leaderBoardScores.OrderByDescending(score => score.Values.First()).ToList();
+                // Save the leaderboard to the file
+                new SaveHandler().SaveLeaderboardFile(ConvertLeaderBoardToString());
             }
         }
 
-        public void Enter() {
+        private string ConvertLeaderBoardToString(){
+            string leaderBoardString = "";
+            for (int i = 0; i < leaderBoardScores.Count; i++)
+            {
+                // Get the current score
+                Dictionary<string, float> score = leaderBoardScores[i];
+                // Get the name of the player
+                string name = score.Keys.First();
+                // Get the score of the player
+                string playerScore = score.Values.First().ToString();
+                // Add the name and score to the string
+                leaderBoardString += name + "," + playerScore + "\n";
+            }
+            return leaderBoardString;
+        }
+
+        public void Enter()
+        {
             leaderBoardBG = content.Load<Texture2D>("LeaderBoardBG");
         }
 
@@ -109,9 +146,10 @@ namespace FinalProjectGameProgramming.GameStates
             // Loop through the top 5 scores
             int nameStartingPosition = 300;
             int scoreStartingPosition = graphicsDeviceManager.PreferredBackBufferWidth - 380;
-            int yStartingPosition = 200;
+            int yStartingPosition = 150;
             int yIncrement = 50;
-            for (int i = 0; i < leaderBoardScores.Count; i++)
+            int leaderboardLimit = leaderBoardScores.Count > 10 ? 10 : leaderBoardScores.Count;
+            for (int i = 0; i < leaderboardLimit; i++)
             {
                 // Get the current score
                 Dictionary<string, float> score = leaderBoardScores[i];

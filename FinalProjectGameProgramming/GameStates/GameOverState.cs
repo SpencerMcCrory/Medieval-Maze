@@ -63,8 +63,6 @@ namespace FinalProjectGameProgramming.GameStates
 
             // Save the current state for the next frame
             previousKeyboardState = currentKeyboardState;
-
-            // base.Update(gameTime);
         }
 
         private void ProcessInput()
@@ -151,7 +149,6 @@ namespace FinalProjectGameProgramming.GameStates
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            // TODO: Add a background image
             spriteBatch.Begin();
             spriteBatch.Draw(gameOverBG, new Rectangle(0, 0, graphicsDeviceManager.PreferredBackBufferWidth, graphicsDeviceManager.PreferredBackBufferHeight), Color.White);
             // convert the message into a vector to get the size of the text
@@ -172,7 +169,6 @@ namespace FinalProjectGameProgramming.GameStates
                 (graphicsDeviceManager.PreferredBackBufferWidth - displayTextSize.X) / 2, // This will keep it centered
                 textPosition.Y + textSize.Y + 120 // Position Y below the score or wherever you'd like it
             );
-
 
             // Draw user input or entered name
             
