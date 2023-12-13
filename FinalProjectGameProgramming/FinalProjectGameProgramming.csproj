@@ -9,10 +9,10 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <ApplicationIcon>knight.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="Icon.ico" />
+    <Content Include="knight.ico" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />

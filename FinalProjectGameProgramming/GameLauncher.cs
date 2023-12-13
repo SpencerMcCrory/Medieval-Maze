@@ -21,6 +21,8 @@ namespace FinalProjectGameProgramming
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            // Change game title
+            Window.Title = "Medieval Maze";
         }
 
         protected override void Initialize()
