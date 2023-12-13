@@ -156,7 +156,7 @@ namespace FinalProjectGameProgramming.GameStates
                     gameStateHandler.ChangeState(new PlayingState(gameStateHandler, level, score));
 
                 } catch(Exception ex) {
-                    System.Windows.Forms.MessageBox.Show(ex.Message,"No file found",MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    System.Windows.Forms.MessageBox.Show(ex.Message,"Medieval Maze",MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
 

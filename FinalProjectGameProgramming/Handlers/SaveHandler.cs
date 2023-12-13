@@ -29,30 +29,6 @@ namespace FinalProjectGameProgramming.Handlers
         {
             try
             {
-                //// Define a relative path for the save file
-                //string relativePath = "SaveFiles";
-                //string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                //string directoryPath = Path.Combine(baseDirectory, relativePath);
-
-                //// Ensure the directory exists
-                //if (!Directory.Exists(directoryPath))
-                //{
-                //    Directory.CreateDirectory(directoryPath);
-                //}
-
-                //// Define the file path (change 'savegame.txt' to your preferred filename)
-                //string filePath = Path.Combine(directoryPath, "savegame.txt");
-
-                //using (StreamWriter writer = new StreamWriter(filePath))
-                //{
-                //    writer.WriteLine($"Level: {level}");
-                //    writer.WriteLine($"Score: {score}");
-                //}
-
-                //// Write the game data to the file
-                ////File.WriteAllText(filePath, $"Level: {level}, Score: {score}");
-                //Console.WriteLine("Game saved successfully.");
-
                 if (!Directory.Exists(directoryPath))
                 {
                     Directory.CreateDirectory(directoryPath);
