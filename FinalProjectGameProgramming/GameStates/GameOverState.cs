@@ -11,6 +11,9 @@ using Microsoft.Xna.Framework.Content;
 
 namespace FinalProjectGameProgramming.GameStates
 {
+    /// <summary>
+    /// game over state is the state that is called when the player dies or finishes the game
+    /// </summary>
     internal class GameOverState : IGameState
     {
         private GraphicsDeviceManager graphicsDeviceManager;
@@ -47,12 +50,13 @@ namespace FinalProjectGameProgramming.GameStates
             {
                 gameOverBG = content.Load<Texture2D>("GameOverBG");
             }
-            
+
         }
 
         public void Enter() {/*not needed*/ }
 
-        public void Exit() {
+        public void Exit()
+        {
             GC.Collect();
         }
 
@@ -83,7 +87,7 @@ namespace FinalProjectGameProgramming.GameStates
                         };
                         // Change to next state
 
-                        nextState = new LeaderBoardState( gameStateHandler, font, playerScore);
+                        nextState = new LeaderBoardState(gameStateHandler, font, playerScore);
                         gameStateHandler.ChangeState(nextState);
                         // Toggle name entry mode
                         isEnteringName = !isEnteringName;
@@ -158,7 +162,7 @@ namespace FinalProjectGameProgramming.GameStates
             // calculate the position of the text
             Vector2 textPosition = new Vector2(
                 (graphicsDeviceManager.PreferredBackBufferWidth - textSize.X) / 2,
-                (graphicsDeviceManager.PreferredBackBufferHeight - textSize.Y) -325
+                (graphicsDeviceManager.PreferredBackBufferHeight - textSize.Y) - 325
             );
             spriteBatch.DrawString(font, score.ToString(), textPosition, Color.White);
 
@@ -166,19 +170,19 @@ namespace FinalProjectGameProgramming.GameStates
             string displayText = userInput.ToString();
             Vector2 displayTextSize = font.MeasureString(displayText);
             //Vector2 userInputPos = new Vector2(textPosition.X, textPosition.Y + textSize.Y + 120);
-            
+
             Vector2 userInputPos = new Vector2(
                 (graphicsDeviceManager.PreferredBackBufferWidth - displayTextSize.X) / 2, // This will keep it centered
                 textPosition.Y + textSize.Y + 120 // Position Y below the score or wherever you'd like it
             );
 
             // Draw user input or entered name
-            
+
             spriteBatch.DrawString(font, displayText, userInputPos, Color.White);
             string exitText = "Enter your name then press ENTER to Main Menu";
             Vector2 exitTextSize = font.MeasureString(exitText);
-            spriteBatch.DrawString(font,exitText , new Vector2(graphicsDeviceManager.PreferredBackBufferWidth / 2 - (exitTextSize.X/2), 
-                                    userInputPos.Y +90), Color.White);
+            spriteBatch.DrawString(font, exitText, new Vector2(graphicsDeviceManager.PreferredBackBufferWidth / 2 - (exitTextSize.X / 2),
+                                    userInputPos.Y + 90), Color.White);
 
             spriteBatch.End();
         }

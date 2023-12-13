@@ -15,6 +15,9 @@ using System.Windows.Forms;
 
 namespace FinalProjectGameProgramming.GameStates
 {
+    /// <summary>
+    /// Main menu state is the state that is called when the game is first started
+    /// </summary>
     internal class MainMenu : IGameState
     {
         private SpriteFont menuFont;

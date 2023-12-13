@@ -34,6 +34,11 @@ namespace FinalProjectGameProgramming.Handlers
         //10 = door
         //11 = no floor (on level 2)
 
+        /// <summary>
+        /// Constructor for the level handler
+        /// Reads in the csv file and creates the grid
+        /// </summary>
+        /// <param name="csvFilePath"></param>
         public LevelHandler(string csvFilePath)
         {
             List<string[]> rows = new List<string[]>();
@@ -48,7 +53,7 @@ namespace FinalProjectGameProgramming.Handlers
                 }
             }
 
-            Grid = new int[rows.Count, rows[0].Length]; 
+            Grid = new int[rows.Count, rows[0].Length];
             MonsterSpawnPoints = new List<int[]>();
             RelicSpawnPoints = new List<int[]>();
             SpikeLocations = new List<int[]>();

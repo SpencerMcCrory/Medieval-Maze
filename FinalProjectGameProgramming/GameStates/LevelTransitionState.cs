@@ -13,6 +13,9 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace FinalProjectGameProgramming.GameStates
 {
+    /// <summary>
+    /// Level transition state is the state that is called when the player completes a level
+    /// </summary>
     internal class LevelTransitionState : IGameState
     {
         private GameStateHandler gameStateHandler;

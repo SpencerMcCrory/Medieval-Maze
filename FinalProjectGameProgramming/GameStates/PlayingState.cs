@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace FinalProjectGameProgramming.GameStates
 {
+    /// <summary>
+    /// The state of the game when the player is playing
+    /// </summary>
     internal class PlayingState : IGameState
     {
         private Level currentLevel;

@@ -10,6 +10,9 @@ using System;
 
 namespace FinalProjectGameProgramming.GameStates
 {
+    /// <summary>
+    /// Help state is the state that shows the instructions for the game
+    /// </summary>
     internal class HelpState : IGameState
     {
         private GraphicsDeviceManager graphicsDeviceManager;

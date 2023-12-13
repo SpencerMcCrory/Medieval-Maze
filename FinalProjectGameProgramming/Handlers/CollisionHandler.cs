@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace FinalProjectGameProgramming.Handlers
 {
+	/// <summary>
+	/// Handles collision detection between entities and the environment.
+	/// </summary>
 	internal class CollisionHandler
 	{
 		private int tileSize;
@@ -18,6 +21,11 @@ namespace FinalProjectGameProgramming.Handlers
 			this.tileSize = tileSize;
 		}
 
+		/// <summary>
+		/// Checks if an entity is colliding with the environment.
+		/// </summary>
+		/// <param name="entityBounds"></param>
+		/// <returns></returns>
 		public bool CheckCollisionWithEnvironment(Rectangle entityBounds)
 		{
 			// Check each corner of the entity's bounding box for collision

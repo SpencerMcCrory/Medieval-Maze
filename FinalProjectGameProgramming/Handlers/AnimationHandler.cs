@@ -8,7 +8,10 @@ using System.Threading.Tasks;
 
 namespace FinalProjectGameProgramming.Handlers
 {
-    /*takes in an array of frames and updates them based on time*/
+    /// <summary>
+    /// Handles all animations in the game.
+    /// Takes in an array of frames and updates them based on time.
+    /// </summary>
     internal class AnimationHandler
     {
         public Texture2D[] Frames { get; set; }

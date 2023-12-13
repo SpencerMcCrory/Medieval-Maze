@@ -10,6 +10,9 @@ using System;
 
 namespace FinalProjectGameProgramming.GameStates
 {
+    /// <summary>
+    /// LeaderBoardState is the state that shows the top 10 scores
+    /// </summary>
     internal class LeaderBoardState : IGameState
     {
         private GraphicsDeviceManager graphicsDeviceManager;

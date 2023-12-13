@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace FinalProjectGameProgramming.Handlers
 {
+    /// <summary>
+    /// Handles saving and loading the game.
+    /// </summary>
     public class SaveHandler
     {
         private int score { get; set; }
@@ -25,6 +28,10 @@ namespace FinalProjectGameProgramming.Handlers
         static string saveFileName = "savegame.txt"; // Name of the save file
         static string leaderboardFileName = "leaderboard.txt"; // Name of the leaderboard file
         string directoryPath = Path.Combine(defaultFolderPath, directoryName); // Combine the default folder path with the directory name
+
+        /// <summary>
+        /// Saves the game to a file.
+        /// </summary>
         public void SaveFile()
         {
             try
@@ -33,7 +40,7 @@ namespace FinalProjectGameProgramming.Handlers
                 {
                     Directory.CreateDirectory(directoryPath);
                 }
-                string filePath = Path.Combine(directoryPath, saveFileName); 
+                string filePath = Path.Combine(directoryPath, saveFileName);
 
                 File.WriteAllText(filePath, $"{level},{score}");
                 Console.WriteLine("Game saved successfully to " + filePath);
@@ -46,6 +53,10 @@ namespace FinalProjectGameProgramming.Handlers
 
         }
 
+        /// <summary>
+        /// Loads the game from a file.
+        /// </summary>
+        /// <returns></returns>
         public string[] LoadFile()
         {
             string filePath = Path.Combine(directoryPath, saveFileName);
@@ -82,6 +93,10 @@ namespace FinalProjectGameProgramming.Handlers
             return null;
         }
 
+        /// <summary>
+        /// Deletes the save file.
+        /// </summary>
+
         public void DeleteSave()
         {
             // The path to your save file
@@ -108,6 +123,10 @@ namespace FinalProjectGameProgramming.Handlers
             }
         }
 
+        /// <summary>
+        /// Saves the leaderboard data to a file.
+        /// </summary>
+        /// <param name="data"></param>
         public void SaveLeaderboardFile(string data)
         {
             try
@@ -128,6 +147,10 @@ namespace FinalProjectGameProgramming.Handlers
             }
         }
 
+        /// <summary>
+        /// Loads the leaderboard data from a file.
+        /// </summary>
+        /// <returns></returns>
         public List<Dictionary<string, float>> LoadLeaderboardFile()
         {
             List<Dictionary<string, float>> collection = new List<Dictionary<string, float>>();
@@ -145,7 +168,9 @@ namespace FinalProjectGameProgramming.Handlers
                     string[] parts = fileContent.Split('\n');
                     foreach (string user in parts)
                     {
+                        // Split data of a row by comma
                         string[] userParts = user.Split(',');
+                        // Ensure there are at least two parts (username and score)
                         if (userParts.Length == 2)
                         {
                             Dictionary<string, float> userScore = new Dictionary<string, float>();

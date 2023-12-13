@@ -10,13 +10,15 @@ using System.Threading.Tasks;
 
 namespace FinalProjectGameProgramming.Handlers
 {
-/*game state handler handles swithcing between states. ie from main menu to playing*/
+    /// <summary>
+    /// game state handler handles swithcing between states. ie from main menu to playing
+    /// </summary>
     internal class GameStateHandler
     {
         private IGameState currentState;
         private IGameState[,] gameStates;
-        public ContentManager Content {  get; private set; }
-        public GraphicsDeviceManager GraphicsDeviceManager {  get; private set; }
+        public ContentManager Content { get; private set; }
+        public GraphicsDeviceManager GraphicsDeviceManager { get; private set; }
         public GraphicsDevice GraphicsDevice { get; private set; }
 
 
@@ -32,6 +34,10 @@ namespace FinalProjectGameProgramming.Handlers
             ChangeState(backgroundImageState);
         }
 
+        /// <summary>
+        /// changes the state of the game
+        /// </summary>
+        /// <param name="newState"></param>
         public void ChangeState(IGameState newState)
         {
             currentState?.Exit();
@@ -39,11 +45,19 @@ namespace FinalProjectGameProgramming.Handlers
             currentState.Enter();
         }
 
+        /// <summary>
+        /// updates the game state
+        /// </summary>
+        /// <param name="gameTime"></param>
         public void Update(GameTime gameTime)
         {
             currentState?.Update(gameTime);
         }
 
+        /// <summary>
+        /// draws the game state
+        /// </summary>
+        /// <param name="spriteBatch"></param>
         public void Draw(SpriteBatch spriteBatch)
         {
             currentState?.Draw(spriteBatch);

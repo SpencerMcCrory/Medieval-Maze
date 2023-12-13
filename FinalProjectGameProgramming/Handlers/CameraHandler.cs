@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace FinalProjectGameProgramming.Handlers
 {
-    /*Camera stays around where the player is instead of the top left position*/
+    /// <summary>
+    /// Handles the camera in the game.
+    /// The camera stays around where the player is instead of the top left position.
+    /// </summary>
     public class CameraHandler
     {
         public System.Numerics.Vector2 Position { get; set; }

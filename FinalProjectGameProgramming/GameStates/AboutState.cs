@@ -10,6 +10,10 @@ using System;
 
 namespace FinalProjectGameProgramming.GameStates
 {
+    /// <summary>
+    /// The about state of the game
+    /// Where name of the developers are displayed
+    /// </summary>
     internal class AboutState : IGameState
     {
         private GraphicsDeviceManager graphicsDeviceManager;

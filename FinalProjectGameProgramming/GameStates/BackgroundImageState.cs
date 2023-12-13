@@ -13,7 +13,9 @@ using System.Threading.Tasks;
 
 namespace FinalProjectGameProgramming.GameStates
 {
-/*Initial load screen that is shown on launch*/
+    /// <summary>
+    /// Background image state is the initial state of the game
+    /// </summary>
     internal class BackgroundImageState : IGameState
     {
         private Texture2D[] backgroundImages;
