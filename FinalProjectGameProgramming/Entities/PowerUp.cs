@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace FinalProjectGameProgramming.Entities
 {
+//abstract class for powerup that will be used to create more powerups in the future
     abstract class PowerUp
     {
 
@@ -57,7 +58,7 @@ namespace FinalProjectGameProgramming.Entities
 
         public void SetDurationTimer(double time)
         {
-            powerUpDuration = time + 15;
+            powerUpDuration += 10;
         }
         private void Deactivate()
         {

@@ -57,7 +57,9 @@ namespace FinalProjectGameProgramming.GameStates
             slime = content.Load<Texture2D>("swampy_anim_f0");
         }
 
-        public void Exit() { }
+        public void Exit() {
+            GC.Collect();
+        }
 
         public void Update(GameTime gameTime)
         {

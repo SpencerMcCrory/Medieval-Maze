@@ -121,7 +121,9 @@ namespace FinalProjectGameProgramming.GameStates
             leaderBoardBG = content.Load<Texture2D>("LeaderBoardBG");
         }
 
-        public void Exit() { }
+        public void Exit() {
+            GC.Collect();
+        }
 
         public void Update(GameTime gameTime)
         {
@@ -135,7 +137,6 @@ namespace FinalProjectGameProgramming.GameStates
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            // TODO: Add a background image
             spriteBatch.Begin();
             //draw bg image
             spriteBatch.Draw(leaderBoardBG, new Rectangle(0, 0, screenWidth, screenHeight), Color.White);

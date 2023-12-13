@@ -57,7 +57,7 @@ namespace FinalProjectGameProgramming.Handlers
                 {
                     Directory.CreateDirectory(directoryPath);
                 }
-                string filePath = Path.Combine(directoryPath, saveFileName); // Ensure C:\temp exists
+                string filePath = Path.Combine(directoryPath, saveFileName); 
 
                 File.WriteAllText(filePath, $"{level},{score}");
                 Console.WriteLine("Game saved successfully to " + filePath);
@@ -73,7 +73,6 @@ namespace FinalProjectGameProgramming.Handlers
         public string[] LoadFile()
         {
             string filePath = Path.Combine(directoryPath, saveFileName);
-            // string filePath = @"C:\temp\savegame.txt"; // The path to your save file
 
             try
             {

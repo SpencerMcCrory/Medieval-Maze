@@ -40,9 +40,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="SaveFiles\" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Update="Handlers\SaveHandler.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
