@@ -60,12 +60,3 @@ Spencer McCrory, Tuan Hoang Nguyen, and David Florez from Conestoga College in t
 
 <img src="https://github.com/SpencerMcCrory/Medieval-Maze/assets/73609765/3479965b-82af-42f7-98a1-9473dd6f9a9c" alt="GamePlay" width="600" height="337.5"/>
 
-
-
-
-
-- [8-Bit Coin Sound Effect](https://creatorassets.com/a/8-bit-coin-sound-effects)
-
-### Other
-- [Tiled](https://www.mapeditor.org/ ) - Map Editor
-[TilledCS](https://www.nuget.org/packages/TiledCS) - Nuget Pagkage
